@@ -22,6 +22,7 @@ export default function ForgotPassword() {
 
     setLoading(true);
 
+
     // Make a request to the backend API to initiate the forgot password process
     await API.post("/auth/forgotPassword", { email }).then(() => {
       setLoading(false);

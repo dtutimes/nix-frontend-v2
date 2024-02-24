@@ -6,10 +6,10 @@ export default function UserCard({ name, email, role, avatar }) {
     <div id="container" className="mx-auto ">
       <div className="flex flex-col sm:flex-row">
         <div className="p-2">
-          <div className=" hover:shadow-xl bg-white px-10 py-8 rounded-lg shadow text-center">
+          <div className="w-60 hover:shadow-xl bg-white px-10 py-8 rounded-lg shadow text-center">
             <div className="mb-3">
               <img
-                className="w-2/3 mx-auto rounded-full"
+                className="w-2/3 mx-auto rounded-full h-24 object-cover"
                 src={`${API.getUri()}/images/get-avatar/${avatar}?thumbnail=true`}
                 alt={name}
               />
