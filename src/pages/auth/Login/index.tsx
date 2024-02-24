@@ -2,42 +2,49 @@ import TimesLogo from "@/assets/dtutimesIcon";
 import { Spinner } from "@/components/Spinner";
 import { CurrUserCtx } from "@/contexts/current_user";
 import API from "@/services/API";
-import {
-  getTokenFromStorage,
-  getUserFromJSON,
-  getUserFromStorage,
-} from "@/services/localStorageParser";
-import React from "react";
-import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
+import { getTokenFromStorage, getUserFromJSON, getUserFromStorage } from "@/services/localStorageParser";
+import React, { useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function Login() {
-  const { setGrantedPermissions, setUser, ready } =
-    React.useContext(CurrUserCtx);
-  const [loading, setLoading] = React.useState(true);
+  const { setGrantedPermissions, setUser, ready } = React.useContext(CurrUserCtx);
   const navigate = useNavigate();
+  const [loading, setLoading] = React.useState(true);
+  const [params, setParams] = useSearchParams();
+  const forcedLogout = params.get("forcedLogout");
+  const sessionExpired = params.get("sessionExpired");
+  setParams();
 
   useEffect(() => {
-    // todo: for some reasons search params standard way doesn't work so have to do manual string search; fix it
-    const forced_logout = window?.location?.href?.includes("forcedLogout=true");
-    if (forced_logout) {
-      API.post("/auth/logout")
-        .then(() => {
+    if (ready) {
+      const forced_logout = forcedLogout === "true";
+      const session_expired = sessionExpired === "true";
+
+      console.log(forcedLogout, sessionExpired);
+      /** in case this causes some bad bad stuff then refer to previous commit
+       * https://github.com/dtutimes/frontend_rm_v2/tree/c32b9aa09b70875f7b670a268e0abda25594163c
+       * this forced_logout thingy was outside the if-ready block for some reasons i can't recall
+       * so in case it causes some prob then tinker why it was written that way.. i should
+       * document my thinking process as well while wiring the important parts :/
+       */
+      if (forced_logout) {
+        API.post("/auth/logout").then(() => {
           setLoading(false);
           toast.info("You have been logged out!");
-        })
-        .catch(() => {
+        }).catch(() => {
           setLoading(false);
           toast.info("Already logged out!");
-        })
-        .finally(() => localStorage.clear());
-    } else if (ready) {
-      const session_expired = window?.location?.href?.includes(
-        "sessionExpired=true"
-      );
-      if (session_expired) {
+        }).finally(() => {
+          localStorage.clear();
+          setGrantedPermissions(null);
+          setUser(null);
+        });
+      } else if (session_expired) {
         localStorage.clear();
+        setGrantedPermissions(null);
+        setUser(null);
         setLoading(false);
         toast.error("Session expired, please login again!");
       } else if (getTokenFromStorage()) {
