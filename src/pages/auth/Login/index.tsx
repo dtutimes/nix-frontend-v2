@@ -156,14 +156,6 @@ export default function Login() {
                 className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-4"
               />
             </div>
-            <div className="text-sm text-right mt-2">
-              <button 
-                onClick={() => navigate("/forgot-password")}
-                className="font-semibold text-gray-900 hover:text-indigo-500"
-              >
-              Forgot password?
-              </button>
-            </div>
           </div>
 
           <div>
@@ -177,6 +169,7 @@ export default function Login() {
         </form>
         <div className="text-sm text-right mt-2">
           <button
+          type="button"
             onClick={() => navigate("/forgot-password")}
             className="font-semibold text-gray-900 hover:text-indigo-500"
           >

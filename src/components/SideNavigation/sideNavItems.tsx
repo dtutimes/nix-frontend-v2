@@ -41,9 +41,9 @@ function SidebarItem({ items, isSidebarOpen ,setIsSidebarOpen}: { items: RouteEl
   if (items.children) {
     return (
       <PermissionProtector permission={items.permission} silent={true}>
-        <div className="flex flex-col w-[240px] cursor-pointer hover:bg-gray-500 hover:rounded" ref={sidebarRef}>
+        <div className="flex flex-col " ref={sidebarRef}>
           <div
-            className="flex items-center justify-between text-white p-2 cursor-pointer"
+            className="flex items-center justify-between text-white p-2 cursor-pointer w-[240px] cursor-pointer hover:bg-gray-500 hover:rounded"
             onClick={() => setOpen(!open)}
           >
             <div className={`flex items-center `}>
