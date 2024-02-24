@@ -8,6 +8,12 @@ import Permission from "@/types/permissions";
 import CustomRouteElement from "@/types/routeElement";
 import React from "react";
 import { PermissionProtector } from "@/components/PermissionProtector";
+import MenuBar from "@/assets/menubar";
+import StoryIcon from "@/assets/StoryIcon";
+import DashIcon from "@/assets/DashIcon";
+import LogOutIcon from "@/assets/LogOutIcon";
+import RoleIcon from "@/assets/RoleIcon";
+import MemberIcon from "@/assets/MemberIcon";
 
 //lazy imports
 const Login = React.lazy(() => import("@/pages/auth/Login"));
@@ -31,17 +37,20 @@ const routeMap: CustomRouteElement[] = [
     element: <Dashbboard />,
     permission: [],
     label: "Dashboard",
+    icon: <DashIcon/>,
   },
   {
     path: "login?forcedLogout=true",
     element: <Login />,
     permission: [],
-    label: "Logout"
+    label: "Logout",
+    icon: <LogOutIcon/>,
   },
   {
     path: "story/",
     element: <><Outlet /></>,
     label: "Story",
+    icon: <StoryIcon/>,
     permission: [Permission.ReadBlog],
     children: [
       {
@@ -80,6 +89,7 @@ const routeMap: CustomRouteElement[] = [
   {
     path: "role/",
     label: "Role",
+    icon: <RoleIcon/>,
     permission: [Permission.ReadRole],
     element: <><Outlet /></>,
     children: [
@@ -108,6 +118,7 @@ const routeMap: CustomRouteElement[] = [
     element: <><Outlet /></>,
     permission: [],
     label: "Member",
+    icon: <MemberIcon/>,
     children: [
       {
         path: "all-members/",
