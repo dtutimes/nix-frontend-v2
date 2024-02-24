@@ -37,7 +37,7 @@ function Sidebar() {
     <div ref={menuRef}>
       <MenuBar className={`absolute left-[20px] top-2 cursor-pointer`}  onClick={(e) => handleMenu(e)} />
 
-      <div className={`min-h-[100vh] bg-[#252525] text-white w-[280px] ${isSidebarOpen ? 'transition-all duration-300' : 'w-[80px] transition-all duration-300'}`}>
+      <div className={`min-h-[100vh] bg-[#252525] text-white w-[280px] ${isSidebarOpen ? 'transition-all duration-300' : 'w-[80px] overflow-hidden transition-all duration-300'}`}>
 
         <div className="flex flex-col p-4">
 
