@@ -9,45 +9,52 @@ function SvgWrapper({ children }) {
   return <>{children}</>;
 }
 
-function SidebarItem({ items, isSidebarOpen ,setIsSidebarOpen}: { items: RouteElement, isSidebarOpen: boolean ,setIsSidebarOpen:React.Dispatch<React.SetStateAction<boolean>> }) {
+function SidebarItem({ items, isSidebarOpen, setIsSidebarOpen }: { items: RouteElement, isSidebarOpen: boolean, setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>> }) {
   const [open, setOpen] = useState(false);
-  const sidebarRef = useRef(null);
+  // const sidebarRef = useRef(null);
 
-  useEffect(() => {
-    function handleMouseOver() {
-      setIsSidebarOpen(true);
-    }
+  // useEffect(() => {
+  //   function handleMouseOver() {
+  //     setIsSidebarOpen(true);
 
-    function handleMouseOut() {
-      setIsSidebarOpen(false);
-    }
+  //   }
 
-    const sidebar = sidebarRef.current;
+  //   function handleMouseOut() {
+  //     setIsSidebarOpen(false);
 
-    if (sidebar) {
-      sidebar.addEventListener("mouseover", handleMouseOver);
-      sidebar.addEventListener("mouseout", handleMouseOut);
+  //   }
 
-      return () => {
-        sidebar.removeEventListener("mouseover", handleMouseOver);
-        sidebar.removeEventListener("mouseout", handleMouseOut);
-      };
-    }
-  }, []);
+  //   const sidebar = sidebarRef.current;
 
+  //   if (sidebar) {
+  //     sidebar.addEventListener("mouseover", handleMouseOver);
+  //     sidebar.addEventListener("mouseout", handleMouseOut);
+
+  //     return () => {
+  //       sidebar.removeEventListener("mouseover", handleMouseOver);
+  //       sidebar.removeEventListener("mouseout", handleMouseOut);
+  //     };
+  //   }
+  // }, []);
+
+  const handleToggle = () => {
+    setOpen(!open);
+  };
 
   if (items.hide) { return null; }
 
   if (items.children) {
     return (
       <PermissionProtector permission={items.permission} silent={true}>
-        <div className="flex flex-col " ref={sidebarRef}>
+        <div className="flex flex-col" >
           <div
-            className="flex items-center justify-between text-white p-2 cursor-pointer w-[240px] cursor-pointer hover:bg-gray-500 hover:rounded"
-            onClick={() => setOpen(!open)}
+            className="flex items-center justify-between text-white p-2 cursor-pointer w-[220px] cursor-pointer hover:bg-gray-500 hover:rounded"
+            onClick={handleToggle}
           >
-            <div className={`flex items-center `}>
-              <SvgWrapper>{items.icon}</SvgWrapper>
+            <div className="flex items-center">
+              <div onMouseOver={()=>setIsSidebarOpen(true)}><SvgWrapper>{items.icon}</SvgWrapper>
+              </div>
+              
               <span className={`ml-3 ${isSidebarOpen ? 'transition-all duration-600' : 'hidden transition-all duration-600'}`}>
                 {items.label}
               </span>
@@ -56,38 +63,37 @@ function SidebarItem({ items, isSidebarOpen ,setIsSidebarOpen}: { items: RouteEl
               {open ? <UpArrow /> : <DownArrow />}
             </div>
           </div>
-          {open ? <div className="pl-4">
-            {items.children.map((item, index) => (
-              <PermissionProtector key={`nested-${item.label}.${index}`} permission={item.permission} silent={true}>
-                <SidebarItem
-                  items={{
-                    ...item,
-                    path: `${items.path}${item.path}`,
-                  }}
-                  isSidebarOpen={isSidebarOpen}
-                  setIsSidebarOpen={setIsSidebarOpen}
-                />
-              </PermissionProtector>
-            ))}
-          </div> : <></>}
+          {isSidebarOpen && open && (
+            <div className="pl-7">
+              {items.children.map((item, index) => (
+                <PermissionProtector key={`nested-${item.label}.${index}`} permission={item.permission} silent={true}>
+                  <SidebarItem
+                    items={{
+                      ...item,
+                      path: `${items.path}${item.path}`,
+                    }}
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
+                  />
+                </PermissionProtector>
+              ))}
+            </div>
+          )}
         </div>
       </PermissionProtector>
     );
   } else {
     return (
       <PermissionProtector permission={items.permission} silent={true}>
-        <div className="flex flex-row" ref={sidebarRef}>
+        <div className="flex flex-row" >
           <Link to={items.path}>
-            <div className={`flex items-center w-[240px] p-2 cursor-pointer hover:bg-gray-500 hover:rounded`}>
-              <SvgWrapper>{items.icon}</SvgWrapper>
+            <div className={`flex items-center w-[220px] p-2 cursor-pointer hover:bg-gray-500 hover:rounded`}>
+            <div onMouseOver={()=>setIsSidebarOpen(true)}><SvgWrapper>{items.icon}</SvgWrapper></div>
               <div className={`ml-3 ${isSidebarOpen ? 'transition-all duration-600' : 'hidden transition-all duration-600'}`}>
                 {items.label}
               </div>
             </div>
-
           </Link>
-          
-          
         </div>
       </PermissionProtector>
     );

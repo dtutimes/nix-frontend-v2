@@ -9,7 +9,7 @@ import MenuBar from "@/assets/menubar.js";
 function Sidebar() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const menuRef = useRef(null);
-  
+
   function handleMenu(e: React.MouseEvent<SVGSVGElement, MouseEvent>) {
 
     e.preventDefault();
@@ -19,7 +19,7 @@ function Sidebar() {
   useEffect(() => {
     //function to handle clicks for sidebarmenu 
     function handleOutsideClicks(e: MouseEvent) {
-    
+
       if (menuRef.current && !menuRef.current.contains(e.target)) {
         setIsSidebarOpen(false);
       }
@@ -35,9 +35,9 @@ function Sidebar() {
   const items = protectedRoutes[0].children;
   return (
     <div ref={menuRef}>
-      <MenuBar className={`absolute left-[20px] top-2 cursor-pointer`}  onClick={(e) => handleMenu(e)} />
+      <MenuBar className={`fixed left-[20px] top-2 cursor-pointer z-20`} onClick={(e) => handleMenu(e)} />
 
-      <div className={`min-h-[100vh] bg-[#252525] text-white w-[280px] ${isSidebarOpen ? 'transition-all duration-300' : 'w-[80px] overflow-hidden transition-all duration-300'}`}>
+      <div className={`min-h-[100vh] bg-[#252525] text-white w-[280px] fixed ${isSidebarOpen ? 'transition-all duration-300' : 'w-[80px] overflow-hidden transition-all duration-300'}`}>
 
         <div className="flex flex-col p-4">
 
@@ -48,30 +48,30 @@ function Sidebar() {
               to="/"
               className="flex justify-center items-center"
             >
-              <TimesLogo className={`h-20 w-[80px]  absolute top-[70px] ${isSidebarOpen ? 'transition-all duration-300' : 'h-20 w-[30px] absolute left-[-5px]  transition-all duration-300'}`} />
+              <TimesLogo className={`h-20 w-[80px]  fixed top-[70px] ${isSidebarOpen ? 'transition-all duration-300' : 'h-20 w-[30px] absolute left-[-5px]  transition-all duration-300'}`} />
             </Link>
             <div className={`p-2 ml-auto text-center text-xs absolute top-[130px] left-6 ${isSidebarOpen ? '' : 'hidden'}`}>
               <span>DTU Times {new Date().getFullYear()}</span>
               <ul className="flex justify-center">
-                
-              {/* {socialLinks.map((link, index) => (
+
+                {/* {socialLinks.map((link, index) => (
                 <li key={index}>
                   <ChevronDownIcon url={link.url} bgColor={link.bgColor} />
                 </li>
               ))}
             */}
               </ul>
-              <span className={`text-xs ${isSidebarOpen ? '' : 'hidden'}`}>
+              {/* <span className={`text-xs ${isSidebarOpen ? '' : 'hidden'}`}>
                 Got any issues? Contact the Developers.
-              </span>
+              </span> */}
             </div>
           </div>
-          <div className={`flex-none w-64 mt-5 bg-[#252525] overflow-auto mt-[120px]`}>
+          <div className={`flex-none w-64 mt-5 mt-[100px]`}>
             {items.map((item, index) => (
               <div className="flex flex-col relative ">
-                <SidebarItem key={`sidebar-root-${index}`} items={item} isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen}/>
+                <SidebarItem key={`sidebar-root-${index}`} items={item} isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
               </div>
-              
+
             ))}
           </div>
         </div>

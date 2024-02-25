@@ -1,5 +1,3 @@
-
-
 export default function Table({ headers, content}) {
   console.log(content);
   // todo: use these functions onDelete & onEdit or remove them

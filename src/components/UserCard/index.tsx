@@ -1,6 +1,4 @@
 import API from "@/services/API";
-
-
 export default function UserCard({ name, email, role, avatar }) {
   return (
     <div id="container" className="mx-auto ">
