@@ -2,19 +2,30 @@ import TimesLogo from "@/assets/dtutimesIcon";
 import { Spinner } from "@/components/Spinner";
 import { CurrUserCtx } from "@/contexts/current_user";
 import API from "@/services/API";
+import showPassIcon from "@/assets/show-password.png";
 
-import { getTokenFromStorage, getUserFromJSON, getUserFromStorage } from "@/services/localStorageParser";
+import {
+  getTokenFromStorage,
+  getUserFromJSON,
+  getUserFromStorage,
+} from "@/services/localStorageParser";
 import React, { useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 export default function Login() {
-  const { setGrantedPermissions, setUser, ready } = React.useContext(CurrUserCtx);
+  const { setGrantedPermissions, setUser, ready } =
+    React.useContext(CurrUserCtx);
   const navigate = useNavigate();
   const [loading, setLoading] = React.useState(true);
   const [params, setParams] = useSearchParams();
+  const [showPass, setShowPass] = React.useState(false);
   const forcedLogout = params.get("forcedLogout");
   const sessionExpired = params.get("sessionExpired");
+
+  const setShowPassHandler = () => {
+    setShowPass(!showPass);
+  };
 
   useEffect(() => {
     if (ready) {
@@ -29,17 +40,20 @@ export default function Login() {
        * document my thinking process as well while wiring the important parts :/
        */
       if (forced_logout) {
-        API.post("/auth/logout").then(() => {
-          setLoading(false);
-          toast.info("You have been logged out!");
-        }).catch(() => {
-          setLoading(false);
-          toast.info("Already logged out!");
-        }).finally(() => {
-          localStorage.clear();
-          setGrantedPermissions(null);
-          setUser(null);
-        });
+        API.post("/auth/logout")
+          .then(() => {
+            setLoading(false);
+            toast.info("You have been logged out!");
+          })
+          .catch(() => {
+            setLoading(false);
+            toast.info("Already logged out!");
+          })
+          .finally(() => {
+            localStorage.clear();
+            setGrantedPermissions(null);
+            setUser(null);
+          });
       } else if (session_expired) {
         localStorage.clear();
         setGrantedPermissions(null);
@@ -74,8 +88,12 @@ export default function Login() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const email = (e.currentTarget.elements.namedItem("email") as HTMLInputElement).value;
-    const password = (e.currentTarget.elements.namedItem("password") as HTMLInputElement).value;
+    const email = (
+      e.currentTarget.elements.namedItem("email") as HTMLInputElement
+    ).value;
+    const password = (
+      e.currentTarget.elements.namedItem("password") as HTMLInputElement
+    ).value;
 
     setLoading(true);
     await API.post("/auth/login", { email, password })
@@ -146,15 +164,25 @@ export default function Login() {
                 Password
               </label>
             </div>
-            <div className="mt-2">
+            <div className="mt-2 relative">
               <input
                 id="password"
                 name="password"
-                type="password"
+                type={showPass ? "text" : "password"}
                 autoComplete="current-password"
                 required
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 px-4"
+                className="block w-full pl-3 pr-10 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
+                onClick={setShowPassHandler}
+              >
+                <img
+                  src={showPassIcon}
+                  alt="toggle password visibility"
+                  className="w-6 h-6"
+                />
+              </div>
             </div>
           </div>
 
