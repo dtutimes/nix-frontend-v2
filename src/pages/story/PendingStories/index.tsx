@@ -75,7 +75,7 @@ export default function PendingStories() {
     API.get(`/blog/get-blog/${blogId}`)
       .then((blogResponse) => {
         const blogDetails = blogResponse.data.data;
-        navigate(`/story/pending-stories/${blogId}`, { state: { key: blogDetails } });
+        navigate(`/story/${blogId}`, { state: { key: blogDetails } });
       })
       .catch((e) => setError(e));
   };

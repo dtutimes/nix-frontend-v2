@@ -27,7 +27,7 @@ const initialState: YourStoriesState = {
   loading: true,
 };
 
-const blogEndpoint = "/blog";
+const myBlogsEndpoint = "/blog/my-blogs";
 
 const enum ActionType {
   SetBlogs,
@@ -89,6 +89,15 @@ export default function AllStory() {
     statusFilters,
     loading,
   } = state;
+
+  const handleRead = (blogId) => {
+    API.get(`/blog/get-blog/${blogId}`)
+      .then((blogResponse) => {
+        const blogDetails = blogResponse.data.data;
+        navigate(`/story/${blogId}`, { state: { key: blogDetails } });
+      })
+      .catch((e) => setError(e));
+  };
 
   const handleDelete = (blogId) => {
     const choice = window.confirm(
@@ -153,7 +162,7 @@ export default function AllStory() {
   };
 
   const fetchBlogs = () => {
-    API.get(blogEndpoint, { data: { userOnly: true } })
+    API.get(myBlogsEndpoint, { data: { userOnly: true } })
       .then((blogResponse) => {
         dispatch({ type: ActionType.SetBlogs, payload: blogResponse.data.data });
         dispatch({ type: ActionType.SetLoading, payload: false });
@@ -217,9 +226,11 @@ export default function AllStory() {
             </span>,
             <MoreMenu
               options={[
-                { label: "Delete", handler: handleDelete, show: blog.status == BlogStatus.Draft, permissions: [Permission.DeleteBlog] },
-                { label: "Archive", handler: handleArchive, show: true, permissions: [Permission.ReadBlog] },
-                { label: "Edit", handler: handleEdit, show: blog.status == BlogStatus.Draft || blog.status == BlogStatus.Pending, permissions: [Permission.ReadBlog] },
+                { label: "Read", handler: handleRead, show: true, permissions: [Permission.ReadBlog]},
+                { label: "Delete", handler: handleDelete, show: blog.status == BlogStatus.Draft, permissions: [Permission.ReadBlog] }, // i dont think a user should need perm to delete their draft
+              // i dont think archive should be available in your stories at all because any user shouldnt be able to archive their published stories
+              //  { label: "Archive", handler: handleArchive, show: blog.status == BlogStatus.Published, permissions: [Permission.ReadBlog] },
+                { label: "Edit", handler: handleEdit, show: blog.status == BlogStatus.Draft, permissions: [Permission.ReadBlog] },
                 { label: "Submit", handler: handleSubmit, show: blog.status == BlogStatus.Draft, permissions: [] }
               ]}
               blogId={blog._id}

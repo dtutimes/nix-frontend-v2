@@ -219,7 +219,7 @@ export default function NewRole({ update_page = false }) {
         <fieldset className="flex flex-col">
           <label className="text-2xl text-black font-medium leading-none mb-2">Permissions</label>
           <MyMultiselect
-            options={Object.keys(Permission).map(key => ({ name: Permission[key], id: key }))}
+            options={Object.keys(Permission).filter((perm) => !isNaN(Number(perm))).map(key => ({ name: Permission[key], id: key }))}
             selectedOptions={selectedPermissions}
             onSelectionChange={handlePermissionChange}
             isSingleSelect={false}

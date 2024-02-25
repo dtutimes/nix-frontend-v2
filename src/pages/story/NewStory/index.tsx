@@ -3,7 +3,8 @@ import { CurrUserCtx } from "@/contexts/current_user";
 import { ErrorContext } from "@/contexts/error";
 import API from "@/services/API";
 import BlogCategory from "@/types/blogCategory";
-import { useContext, useEffect, useReducer } from "react";
+import BlogStatus from "@/types/blogStatus";
+import { useContext, useEffect, useReducer, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 // const TextEditor = React.lazy(() => import("@/components/TextEditor"))
@@ -49,6 +50,7 @@ export default function NewStory() {
   const { setError } = useContext(ErrorContext);
   const { user } = useContext(CurrUserCtx);
   const location = useLocation();
+  const toastId = useRef(null);
 
   const reducer = (state: NewStoryState, action: { type: ActionType, payload }) => {
     const updatedData = { ...state };
@@ -72,6 +74,7 @@ export default function NewStory() {
       {
         const image = action.payload as File;
         if (image) {
+          toastId.current = toast.info("Uploading 0%", { autoClose: false });
           const form = new FormData();
           form.append("image", image);
           const endpoint = state.blogImage ? `/images/update/${state.blogImage}` : "/images/upload";
@@ -81,12 +84,32 @@ export default function NewStory() {
             method: requestMethod,
             url: endpoint,
             data: form,
+            onUploadProgress: (progressEvent) => {
+              const progress = progressEvent.loaded / progressEvent.total;
+              const percentCompleted = Math.round(progress * 100);
+              console.log(progress);
+              toast.update(toastId.current, {
+                render: `Uploading ${percentCompleted}%`,
+                type: "info",
+                progress: progress,
+              });
+            }
           })
             .then((res) => {
-              toast.success(state.blogImage ? "Image updated successfully" : "Image uploaded successfully");
+              toast.update(toastId.current, {
+                render: "Uploading complete!",
+                type: "info",
+                progress: 1,
+              });
+              toast.done(toastId.current);
+              toast.success("Image uploaded successfully");
               const image_name = res.data.data.name;
               dispatch({ type: ActionType.SetBlogImageLink, payload: image_name });
-            }).catch((e) => setError(e));
+            }).catch((e) => {
+              toast.done(toastId.current);
+              setError(e);
+            })
+            .finally(() => toastId.current = null);
         }
       }
       break;
@@ -132,10 +155,9 @@ export default function NewStory() {
     }
   }, []);
 
-  const handleSubmit = (e, saveAsDraft) => {
+  const handleSubmit = (e, saveAsDraft: boolean) => {
     console.log(saveAsDraft);
     e.preventDefault();
-
     if (!title || !byliner || !metaDescription || !metaTitle || !slug) {
       toast.error("Please fill out all the required fields.");
       return;
@@ -150,7 +172,7 @@ export default function NewStory() {
       meta_title: metaTitle,
       meta_description: metaDescription,
       user_id: user.id,
-      saveAsDraft: saveAsDraft,
+      status: saveAsDraft ? BlogStatus.Draft : BlogStatus.Pending,
       cover: blogImage,
     };
 
@@ -244,6 +266,7 @@ export default function NewStory() {
           className="w-full p-2 border border-gray-300 rounded"
           id="blog-image"
           type="file"
+          accept="image/png, image/jpeg, image/jpg"
           onChange={(e) => dispatch({ type: ActionType.SetBlogImage, payload: e.target.files[0] })}
         />
       </div>

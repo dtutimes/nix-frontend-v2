@@ -70,6 +70,15 @@ export default function PublishedStories() {
     loading,
   } = state;
 
+  const handleRead = (blogId) => {
+    API.get(`/blog/get-blog/${blogId}`)
+      .then((blogResponse) => {
+        const blogDetails = blogResponse.data.data;
+        navigate(`/story/${blogId}`, { state: { key: blogDetails } });
+      })
+      .catch((e) => setError(e));
+  };
+
   const handleDelete = (blogId) => {
     const choice = window.confirm(
       "Are you sure you want to delete this story?"
@@ -153,6 +162,7 @@ export default function PublishedStories() {
             </span>,
             <MoreMenu
               options={[
+                {label: "Read", handler: handleRead, show: true, permissions:[Permission.ReadBlog]},
                 {label: "Delete", handler: handleDelete, show:true, permissions:[Permission.DeleteBlog]},
                 {label: "Archive", handler: handleArchive, show:true, permissions:[Permission.DeleteBlog]},
               ]}
