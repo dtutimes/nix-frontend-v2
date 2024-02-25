@@ -37,7 +37,7 @@ function Sidebar() {
     <div ref={menuRef}>
       <MenuBar className={`fixed left-[20px] top-2 cursor-pointer z-20`} onClick={(e) => handleMenu(e)} />
 
-      <div className={`min-h-[100vh] bg-[#252525] text-white w-[280px] fixed ${isSidebarOpen ? 'transition-all duration-300' : 'w-[80px] overflow-hidden transition-all duration-300'}`}>
+      <div className={`h-[120vh] bg-[#252525] text-white w-[280px] fixed ${isSidebarOpen ? 'fixed transition-all duration-300' : 'fixed w-[80px] overflow-hidden transition-all duration-300'}`}>
 
         <div className="flex flex-col p-4">
 
@@ -48,10 +48,11 @@ function Sidebar() {
               to="/"
               className="flex justify-center items-center"
             >
-              <TimesLogo className={`h-20 w-[80px]  fixed top-[70px] ${isSidebarOpen ? 'transition-all duration-300' : 'h-20 w-[30px] absolute left-[-5px]  transition-all duration-300'}`} />
+              <TimesLogo className={`h-20 w-[80px] fixed top-[70px] ${isSidebarOpen ? 'transition-all duration-300' : 'h-20 w-[30px] absolute left-[-5px]  transition-all duration-300'}`} />
             </Link>
-            <div className={`p-2 ml-auto text-center text-xs absolute top-[130px] left-6 ${isSidebarOpen ? '' : 'hidden'}`}>
-              <span>DTU Times {new Date().getFullYear()}</span>
+            <div className={`p-2 text-center text-xs absolute top-[140px] left-[90px] ${isSidebarOpen ? '' : 'left-[-400px]'}`}>
+              <span className="whitespace-nowrap  ">DTU Times {new Date().getFullYear()}
+              </span>
               <ul className="flex justify-center">
 
                 {/* {socialLinks.map((link, index) => (
@@ -66,7 +67,7 @@ function Sidebar() {
               </span> */}
             </div>
           </div>
-          <div className={`flex-none w-64 mt-5 mt-[100px]`}>
+          <div className={`flex-none w-64  mt-[140px]`}>
             {items.map((item, index) => (
               <div className="flex flex-col relative ">
                 <SidebarItem key={`sidebar-root-${index}`} items={item} isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
@@ -74,6 +75,7 @@ function Sidebar() {
 
             ))}
           </div>
+          
         </div>
       </div>
     </div>

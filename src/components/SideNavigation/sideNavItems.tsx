@@ -1,8 +1,10 @@
 import DownArrow from "@/assets/ChevronDownIcon";
 import UpArrow from "@/assets/ChevronUpIcon";
+import LogOutIcon from "@/assets/LogOutIcon";
 import { PermissionProtector } from "@/components/PermissionProtector";
+import Login from "@/pages/auth/Login";
 import RouteElement from "@/types/routeElement";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 
 function SvgWrapper({ children }) {
@@ -48,13 +50,13 @@ function SidebarItem({ items, isSidebarOpen, setIsSidebarOpen }: { items: RouteE
       <PermissionProtector permission={items.permission} silent={true}>
         <div className="flex flex-col" >
           <div
-            className="flex items-center justify-between text-white p-2 cursor-pointer w-[220px] cursor-pointer hover:bg-gray-500 hover:rounded"
+            className="flex items-center justify-between text-white p-2 cursor-pointer w-[220px] hover:bg-gray-500 hover:rounded"
             onClick={handleToggle}
           >
             <div className="flex items-center">
-              <div onMouseOver={()=>setIsSidebarOpen(true)}><SvgWrapper>{items.icon}</SvgWrapper>
+              <div onMouseOver={() => setIsSidebarOpen(true)} className={`${isSidebarOpen ? 'transition-all duration-800' : 'scale-[1.5] transition-all duration-800'}`}><SvgWrapper>{items.icon}</SvgWrapper>
               </div>
-              
+
               <span className={`ml-3 ${isSidebarOpen ? 'transition-all duration-600' : 'hidden transition-all duration-600'}`}>
                 {items.label}
               </span>
@@ -84,18 +86,23 @@ function SidebarItem({ items, isSidebarOpen, setIsSidebarOpen }: { items: RouteE
     );
   } else {
     return (
-      <PermissionProtector permission={items.permission} silent={true}>
-        <div className="flex flex-row" >
-          <Link to={items.path}>
-            <div className={`flex items-center w-[220px] p-2 cursor-pointer hover:bg-gray-500 hover:rounded`}>
-            <div onMouseOver={()=>setIsSidebarOpen(true)}><SvgWrapper>{items.icon}</SvgWrapper></div>
-              <div className={`ml-3 ${isSidebarOpen ? 'transition-all duration-600' : 'hidden transition-all duration-600'}`}>
-                {items.label}
+      <>
+        <PermissionProtector permission={items.permission} silent={true}>
+          <div className="flex flex-row" id={items.customClass}>
+            <Link to={items.path}>
+              <div id='trial' className={`flex items-center w-[220px] p-2 cursor-pointer hover:bg-gray-500 hover:rounded`}>
+                <div onMouseOver={() => setIsSidebarOpen(true)} className={`${isSidebarOpen ? 'transition-all duration-800' : 'scale-[1.5] transition-all duration-800'}`}><SvgWrapper>{items.icon}</SvgWrapper></div>
+                <div className={`ml-3 ${isSidebarOpen ? 'transition-all duration-600' : 'hidden transition-all duration-600'}`}>
+                  {items.label}
+                </div>
               </div>
-            </div>
-          </Link>
-        </div>
-      </PermissionProtector>
+            </Link>
+          </div>
+
+         
+        </PermissionProtector>
+        
+      </>
     );
   }
 }

@@ -8,7 +8,6 @@ import Permission from "@/types/permissions";
 import CustomRouteElement from "@/types/routeElement";
 import React from "react";
 import { PermissionProtector } from "@/components/PermissionProtector";
-import MenuBar from "@/assets/menubar";
 import StoryIcon from "@/assets/StoryIcon";
 import DashIcon from "@/assets/DashIcon";
 import LogOutIcon from "@/assets/LogOutIcon";
@@ -39,13 +38,7 @@ const routeMap: CustomRouteElement[] = [
     label: "Dashboard",
     icon: <DashIcon/>,
   },
-  {
-    path: "login?forcedLogout=true",
-    element: <Login />,
-    permission: [],
-    label: "Logout",
-    icon: <LogOutIcon/>,
-  },
+  
   {
     path: "story/",
     element: <><Outlet /></>,
@@ -133,6 +126,14 @@ const routeMap: CustomRouteElement[] = [
         label: "Add Member",
       }
     ]
+  },
+  {
+    path: "login?forcedLogout=true",
+    element: <Login />,
+    permission: [],
+    label: <span className="logout-label">Logout</span>,
+    customClass:'logout-label',
+    icon: <LogOutIcon/>,
   },
 ];
 

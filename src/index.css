@@ -30,3 +30,8 @@
     @apply bg-blue-200;
     @apply text-blue-800;
 }
+
+#logout-label{
+    position: fixed;
+    bottom: 40px;
+}
