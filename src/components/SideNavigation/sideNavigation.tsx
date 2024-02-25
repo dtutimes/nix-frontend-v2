@@ -48,9 +48,9 @@ function Sidebar() {
               to="/"
               className="flex justify-center items-center"
             >
-              <TimesLogo className={`h-20 w-[80px] fixed top-[70px] ${isSidebarOpen ? 'transition-all duration-300' : 'h-20 w-[30px] absolute left-[-5px]  transition-all duration-300'}`} />
+              <TimesLogo className={`h-20 w-[80px] fixed top-[60px] ${isSidebarOpen ? 'transition-all duration-300' : 'h-20 w-[30px] absolute left-[-5px]  transition-all duration-300'}`} />
             </Link>
-            <div className={`p-2 text-center text-xs absolute top-[140px] left-[90px] ${isSidebarOpen ? '' : 'left-[-400px]'}`}>
+            <div className={`p-2 text-center text-xs absolute top-[120px] left-[90px] ${isSidebarOpen ? '' : 'left-[-400px]'}`}>
               <span className="whitespace-nowrap  ">DTU Times {new Date().getFullYear()}
               </span>
               <ul className="flex justify-center">
@@ -67,7 +67,7 @@ function Sidebar() {
               </span> */}
             </div>
           </div>
-          <div className={`flex-none w-64  mt-[140px]`}>
+          <div className={`flex-none w-64  mt-[105px]`}>
             {items.map((item, index) => (
               <div className="flex flex-col relative ">
                 <SidebarItem key={`sidebar-root-${index}`} items={item} isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />

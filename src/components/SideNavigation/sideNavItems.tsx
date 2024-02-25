@@ -50,7 +50,7 @@ function SidebarItem({ items, isSidebarOpen, setIsSidebarOpen }: { items: RouteE
       <PermissionProtector permission={items.permission} silent={true}>
         <div className="flex flex-col" >
           <div
-            className="flex items-center justify-between text-white p-2 cursor-pointer w-[220px] hover:bg-gray-500 hover:rounded"
+            className="flex items-center justify-between text-white px-2 py-1.5 cursor-pointer w-[220px] hover:bg-gray-500 hover:rounded"
             onClick={handleToggle}
           >
             <div className="flex items-center">
@@ -66,7 +66,7 @@ function SidebarItem({ items, isSidebarOpen, setIsSidebarOpen }: { items: RouteE
             </div>
           </div>
           {isSidebarOpen && open && (
-            <div className="pl-7">
+            <div className="pl-4 translate-y-[-10px]">
               {items.children.map((item, index) => (
                 <PermissionProtector key={`nested-${item.label}.${index}`} permission={item.permission} silent={true}>
                   <SidebarItem
