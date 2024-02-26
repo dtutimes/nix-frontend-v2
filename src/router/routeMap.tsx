@@ -21,6 +21,7 @@ const YourStories = React.lazy(() => import("@/pages/story/YourStories"));
 const PendingStories = React.lazy(() => import("@/pages/story/PendingStories"));
 const ReadStory = React.lazy(() => import("@/pages/story/ReadStory"));
 const PublishedStories = React.lazy(() => import("@/pages/story/PublishedStories"));
+const ApprovedStories = React.lazy(() => import("@/pages/story/ApprovedStories"));
 const AllRoles = React.lazy(() => import("@/pages/roles/AllRoles"));
 const NewRole = React.lazy(() => import("@/pages/roles/NewRole"));
 const AllMembers = React.lazy(() => import("@/pages/member/AllMembers"));
@@ -70,6 +71,12 @@ const routeMap: CustomRouteElement[] = [
         label: "Read Story",
         permission: [Permission.ReadBlog, Permission.PublishBlog],
         hide: true
+      },
+      {
+        path: "approved-stories/",
+        element: <ApprovedStories />,
+        label: "Approved Stories",
+        permission: [Permission.PublishBlog],
       },
       {
         path: "published-stories/",

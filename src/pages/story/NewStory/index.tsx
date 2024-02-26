@@ -58,81 +58,81 @@ export default function NewStory() {
   ) => {
     const updatedData = { ...state };
     switch (action.type) {
-      case ActionType.SetTitle:
-        updatedData.title = action.payload;
-        break;
-      case ActionType.SetByliner:
-        updatedData.byliner = action.payload;
-        break;
-      case ActionType.SetContent:
-        updatedData.content = action.payload;
-        break;
-      case ActionType.SetSlug:
-        updatedData.slug = action.payload;
-        break;
-      case ActionType.SetSelectedCategory:
-        updatedData.selectedCategory = action.payload;
-        break;
-      case ActionType.SetBlogImage:
-        {
-          const image = action.payload as File;
-          if (image) {
-            toastId.current = toast.info("Uploading 0%", { autoClose: false });
-            const form = new FormData();
-            form.append("image", image);
-            const endpoint = state.blogImage
-              ? `/images/update/${state.blogImage}`
-              : "/images/upload";
-            const requestMethod = state.blogImage ? "PUT" : "POST";
+    case ActionType.SetTitle:
+      updatedData.title = action.payload;
+      break;
+    case ActionType.SetByliner:
+      updatedData.byliner = action.payload;
+      break;
+    case ActionType.SetContent:
+      updatedData.content = action.payload;
+      break;
+    case ActionType.SetSlug:
+      updatedData.slug = action.payload;
+      break;
+    case ActionType.SetSelectedCategory:
+      updatedData.selectedCategory = action.payload;
+      break;
+    case ActionType.SetBlogImage:
+      {
+        const image = action.payload as File;
+        if (image) {
+          toastId.current = toast.info("Uploading 0%", { autoClose: false });
+          const form = new FormData();
+          form.append("image", image);
+          const endpoint = state.blogImage
+            ? `/images/update/${state.blogImage}`
+            : "/images/upload";
+          const requestMethod = state.blogImage ? "PUT" : "POST";
 
-            API({
-              method: requestMethod,
-              url: endpoint,
-              data: form,
-              onUploadProgress: (progressEvent) => {
-                const progress = progressEvent.loaded / progressEvent.total;
-                const percentCompleted = Math.round(progress * 100);
-                console.log(progress);
-                toast.update(toastId.current, {
-                  render: `Uploading ${percentCompleted}%`,
-                  type: "info",
-                  progress: progress,
-                });
-              },
+          API({
+            method: requestMethod,
+            url: endpoint,
+            data: form,
+            onUploadProgress: (progressEvent) => {
+              const progress = progressEvent.loaded / progressEvent.total;
+              const percentCompleted = Math.round(progress * 100);
+              console.log(progress);
+              toast.update(toastId.current, {
+                render: `Uploading ${percentCompleted}%`,
+                type: "info",
+                progress: progress,
+              });
+            },
+          })
+            .then((res) => {
+              toast.update(toastId.current, {
+                render: "Uploading complete!",
+                type: "info",
+                progress: 1,
+              });
+              toast.done(toastId.current);
+              toast.success("Image uploaded successfully");
+              const image_name = res.data.data.name;
+              dispatch({
+                type: ActionType.SetBlogImageLink,
+                payload: image_name,
+              });
             })
-              .then((res) => {
-                toast.update(toastId.current, {
-                  render: "Uploading complete!",
-                  type: "info",
-                  progress: 1,
-                });
-                toast.done(toastId.current);
-                toast.success("Image uploaded successfully");
-                const image_name = res.data.data.name;
-                dispatch({
-                  type: ActionType.SetBlogImageLink,
-                  payload: image_name,
-                });
-              })
-              .catch((e) => {
-                toast.done(toastId.current);
-                setError(e);
-              })
-              .finally(() => (toastId.current = null));
-          }
+            .catch((e) => {
+              toast.done(toastId.current);
+              setError(e);
+            })
+            .finally(() => (toastId.current = null));
         }
-        break;
-      case ActionType.SetMetaDescription:
-        updatedData.metaDescription = action.payload;
-        break;
-      case ActionType.SetMetaTitle:
-        updatedData.metaTitle = action.payload;
-        break;
-      case ActionType.SetBlogImageLink:
-        updatedData.blogImage = action.payload;
-        break;
-      default:
-        return updatedData;
+      }
+      break;
+    case ActionType.SetMetaDescription:
+      updatedData.metaDescription = action.payload;
+      break;
+    case ActionType.SetMetaTitle:
+      updatedData.metaTitle = action.payload;
+      break;
+    case ActionType.SetBlogImageLink:
+      updatedData.blogImage = action.payload;
+      break;
+    default:
+      return updatedData;
     }
     return updatedData;
   };
@@ -244,7 +244,7 @@ export default function NewStory() {
           onChange={handleInput}
         />
       </h1>
-      <div className="mb-6 ">
+      <div className="mb-6">
         <label className="block mb-2" htmlFor="byliner">
           Byliner
         </label>
@@ -263,7 +263,7 @@ export default function NewStory() {
         {/*  todo: fix type error */}
         <div className="block mb-2" /** htmlFor="ck_editor"*/>
           Content
-          <div className="py-2 w-full border-gray-300 rounded" id="ck_editor">
+          <div className="py-2 w-full border-gray-300 rounded " id="ck_editor">
             <TextEditor
               value={content}
               onChange={(value) =>
