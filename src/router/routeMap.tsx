@@ -138,7 +138,7 @@ const routeMap: CustomRouteElement[] = [
     path: "login?forcedLogout=true",
     element: <Login />,
     permission: [],
-    label: <span className="logout-label">Logout</span>,
+    label: "Logout",
     customClass:'logout-label',
     icon: <LogOutIcon/>,
   },

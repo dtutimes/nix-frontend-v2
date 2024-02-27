@@ -34,12 +34,12 @@ function Sidebar() {
   }, []);
   const items = protectedRoutes[0].children;
   return (
-    <div ref={menuRef}>
+    <div ref={menuRef} >
       <MenuBar className={`fixed left-[20px] top-2 cursor-pointer z-20`} onClick={(e) => handleMenu(e)} />
 
-      <div className={`h-[120vh] bg-[#252525] text-white w-[280px] fixed ${isSidebarOpen ? 'fixed transition-all duration-300' : 'fixed w-[80px] overflow-hidden transition-all duration-300'}`}>
+      <div className={` h-[200vh] bg-[#252525] text-white w-[280px] fixed top-0 left-0 ${isSidebarOpen ? 'fixed transition-all duration-300' : 'fixed w-[70px] flex m-auto overflow-hidden transition-all duration-300'}`}>
 
-        <div className="flex flex-col p-4">
+        <div className="flex items-center flex-col p-3">
 
 
 
@@ -67,15 +67,18 @@ function Sidebar() {
               </span> */}
             </div>
           </div>
-          <div className={`flex-none w-64  mt-[105px]`}>
+          <div className={`flex-none w-64 mt-[105px] `}>
             {items.map((item, index) => (
-              <div className="flex flex-col relative ">
-                <SidebarItem key={`sidebar-root-${index}`} items={item} isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen} />
+              <div className="flex flex-col" key={`sidebar-root-${index}`}>
+                <div className="mt-[7px]">
+                  <SidebarItem items={item} isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen}/>
+
+                </div>
               </div>
 
             ))}
           </div>
-          
+
         </div>
       </div>
     </div>
