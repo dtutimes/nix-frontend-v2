@@ -31,10 +31,7 @@ const enum ActionType {
   SetLoading,
 }
 
-const reducer = (
-  state: ApprovedStoriesState,
-  action: { type: ActionType; payload }
-) => {
+const reducer = (state: ApprovedStoriesState, action: {type: ActionType, payload }) => {
   const updatedData = { ...state };
   switch (action.type) {
   case ActionType.SetBlogs:
@@ -67,7 +64,11 @@ export default function ApprovedStories() {
   const { setError } = useContext(ErrorContext);
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const { blogs, searchTerm, loading } = state;
+  const {
+    blogs,
+    searchTerm,
+    loading,
+  } = state;
 
   const handleRead = (blogId) => {
     API.get(`/blog/get-blog/${blogId}`)
@@ -99,12 +100,7 @@ export default function ApprovedStories() {
   const fetchBlogs = () => {
     API.get(blogEndpoint)
       .then((blogResponse) => {
-        dispatch({
-          type: ActionType.SetBlogs,
-          payload: blogResponse.data.data.filter(
-            (blog) => blog.status == BlogStatus.Approved
-          ),
-        });
+        dispatch({ type: ActionType.SetBlogs, payload: blogResponse.data.data.filter((blog) => blog.status == BlogStatus.Approved) });
         dispatch({ type: ActionType.SetLoading, payload: false });
       })
       .catch((error) => {
@@ -117,27 +113,23 @@ export default function ApprovedStories() {
     fetchBlogs();
   }, []);
 
-  if (loading) return <div className="flex flex-grow w-full h-full justify-center items-center"><Spinner /></div>;
+
+  if (loading) return <div className="flex justify-center items-center"><Spinner /></div>;
 
   return (
     <div className="max-w-4xl mx-auto py-12">
-      <h1>Approved Stories</h1>
+      <h1 className="text-4xl font-semibold text-center">Approved Stories</h1>
       <div className="px-3 mt-4">
         <SearchBar
           searchTerm={searchTerm}
-          onSearch={(value) =>
-            dispatch({ type: ActionType.SetSearchTerm, payload: value })
-          }
+          onSearch={(value) => dispatch({ type: ActionType.SetSearchTerm, payload: value })}
         />
       </div>
       <main className="flex-grow p-6">
         <Table
           headers={tableHeaders}
-          content={getFilteredBlogs(blogs, searchTerm).map((blog) => [
-            new Date(blog.published_at).toLocaleString(undefined, {
-              dateStyle: "medium",
-              timeStyle: "short",
-            }),
+          content={getFilteredBlogs(blogs, searchTerm).map(blog => [
+            new Date(blog.published_at).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" }),
             blog.user.name,
             blog.title,
             BlogCategory[blog.category_id],
@@ -145,9 +137,7 @@ export default function ApprovedStories() {
               // tailwind is compiled to real css, so we can't use dynamic tailwind wale class names
               // alternative fix is to re-export these class names in index.css
               // i'm lazy, so i just did this impl instead
-              className={`px-2 py-1 inline-block rounded-md ${
-                BlogStatus[blog.status]
-              }`}
+              className={`px-2 py-1 inline-block rounded-md ${BlogStatus[blog.status]}`}
               key={blog.category_id}
             >
               <TagIcon className="w-4 h-4 inline max-lg:hidden mr-1 size-min " />
@@ -155,22 +145,12 @@ export default function ApprovedStories() {
             </span>,
             <MoreMenu
               options={[
-                {
-                  label: "Read",
-                  handler: handleRead,
-                  show: true,
-                  permissions: [Permission.ReadBlog],
-                },
-                {
-                  label: "Archive",
-                  handler: handleArchive,
-                  show: true,
-                  permissions: [Permission.DeleteBlog],
-                },
+                { label: "Read", handler: handleRead, show: true, permissions: [Permission.ReadBlog] },
+                { label: "Archive", handler: handleArchive, show: true, permissions: [Permission.DeleteBlog] },
               ]}
               blogId={blog._id}
               key={blog._id}
-            />,
+            />
           ])}
         />
       </main>

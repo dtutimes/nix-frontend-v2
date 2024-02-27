@@ -3,6 +3,7 @@
 import { Outlet } from "react-router-dom";
 
 import ErrorPage from "@/error-page";
+import Layout from "@/pages/Layout";
 import Permission from "@/types/permissions";
 import CustomRouteElement from "@/types/routeElement";
 import React from "react";
@@ -120,17 +121,17 @@ const routeMap: CustomRouteElement[] = [
     icon: <MemberIcon/>,
     children: [
       {
-        path: "add-member/",
-        element: <AddMember />,
-        permission: [Permission.CreateProfile],
-        label: "Add Member",
-      },
-      {
         path: "all-members/",
         element: <AllMembers />,
         permission: [],
         label: "All Members",
       },
+      {
+        path: "add-member/",
+        element: <AddMember />,
+        permission: [Permission.CreateProfile],
+        label: "Add Member",
+      }
     ]
   },
   {
@@ -157,7 +158,7 @@ const make_protected = (routes: CustomRouteElement[]) => {
 export const protectedRoutes = [
   {
     path: "/",
-    element: <Outlet />,
+    element: <Layout><Outlet /> </Layout>,
     errorElement: <ErrorPage />,
     children: make_protected(routeMap)
   },

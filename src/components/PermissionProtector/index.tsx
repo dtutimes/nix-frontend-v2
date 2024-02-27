@@ -2,6 +2,7 @@ import { CurrUserCtx } from "@/contexts/current_user";
 import { PermErrCtx } from "@/contexts/permission_error";
 import Permissions from "@/types/permissions";
 import React, { ReactNode } from "react";
+import { Spinner } from "../Spinner";
 
 interface PermissionProtectorProps {
   children?: ReactNode;
@@ -15,7 +16,7 @@ export const PermissionProtector: React.FC<PermissionProtectorProps> = ({ childr
 
   if (!required_permissions || required_permissions?.length === 0 || grantedPermissions === "*") return children;
 
-  if (!ready) return <></>;
+  if (!ready) return <div className="flex w-full h-full justify-center items-center"><Spinner /></div>;
 
   if (grantedPermissions && grantedPermissions.length > 0) {
     const failedPerm = (required_permissions).filter((permission) => !grantedPermissions.includes(permission));

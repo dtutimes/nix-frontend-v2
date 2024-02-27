@@ -14,13 +14,6 @@ const TextEditor = ({value, onChange}) => {
         ],
       },
       placeholder: "Type your content here.",
-      ui:{
-        poweredBy:{
-          position:'inside',
-          side:'left',
-          label:'This is'
-        }
-      }
     }}
     data={value}
     onChange={(event, editor) => {

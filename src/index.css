@@ -1,38 +1,64 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+ 
 :root {
-  /* this is just to test tailwind theme config */
-  --bg-color: theme("colors.white");
-  --alt-bg-color: theme("colors.blue.500");
-  --accent-color: blue-500;
-  --text-color-main: gray-900;
-  --text-color-highlight: gray-500;
+    /* this is just to test tailwind theme config */
+    --bg-color: theme('colors.white');
+    --alt-bg-color: theme('colors.blue.500');
+    --accent-color: blue-500;
+    --text-color-main: gray-900;
+    --text-color-highlight: gray-500;
 }
 
 .Pending {
-  @apply bg-red-200;
-  @apply text-red-800;
+    @apply bg-red-200;
+    @apply text-red-800;
 }
 
 .Published {
-  @apply bg-green-200;
-  @apply text-green-800;
+    @apply bg-green-200;
+    @apply text-green-800;
 }
 
 .Approved {
-  @apply bg-yellow-200;
-  @apply text-yellow-800;
+    @apply bg-yellow-200;
+    @apply text-yellow-800;
 }
 
 .Draft {
-  @apply bg-blue-200;
-  @apply text-blue-800;
+    @apply bg-blue-200;
+    @apply text-blue-800;
 }
 
-h1 {
-  font-size: 2.25rem;
-  font-weight: 600;
-  text-align: center;
+#logout-label{
+    position: absolute;
+    top: 10px;
+    left:220px;
+    width: 40px;
+    height: 35px;
+    background: red;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+    border-radius: 6px; 
+}
+#logout-label span{
+    background-color: red;
+    width: 40px;
+    padding: 10px;
+    display: flex;
+    justify-content: center;
+    transform: translateX(-8px);
+    
+}
+#logout-label span:hover{
+    background-color: red;
+}
+#logout-label div:nth-child(2){
+    background-color: red;
+    display: none;
+    
 }
