@@ -2,83 +2,55 @@ import { protectedRoutes } from "@/router/routeMap";
 import SidebarItem from "./sideNavItems.jsx";
 import { Link } from "react-router-dom";
 import TimesLogo from "@/assets/dtutimesIcon.js";
-
-import { useEffect, useRef, useState } from "react";
-import MenuBar from "@/assets/menubar.js";
+import React from "react";
 
 function Sidebar() {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const menuRef = useRef(null);
-
-  function handleMenu(e: React.MouseEvent<SVGSVGElement, MouseEvent>) {
-
-    e.preventDefault();
-    setIsSidebarOpen(!isSidebarOpen);
-
-  }
-  useEffect(() => {
-    //function to handle clicks for sidebarmenu 
-    function handleOutsideClicks(e: MouseEvent) {
-
-      if (menuRef.current && !menuRef.current.contains(e.target)) {
-        setIsSidebarOpen(false);
-      }
-    }
-
-    //adding event listener on component mount
-    document.addEventListener("mousedown", handleOutsideClicks);
-    return () => {
-      // removing the listener once the component unmounts
-      document.removeEventListener("mousedown", handleOutsideClicks);
-    };
-  }, []);
   const items = protectedRoutes[0].children;
+
+  const [open, setOpen] = React.useState(null);
+  const openerFn = (index) => {
+    if (index === open) {
+      setOpen(null);
+    } else {
+      setOpen(index);
+    }
+  };
+
   return (
-    <div ref={menuRef} >
-      <MenuBar className={`fixed left-[20px] top-2 cursor-pointer z-20`} onClick={(e) => handleMenu(e)} />
-
-      <div className={` h-[200vh] bg-[#252525] text-white w-[280px] fixed top-0 left-0 ${isSidebarOpen ? 'fixed transition-all duration-300' : 'fixed w-[70px] flex m-auto overflow-hidden transition-all duration-300'}`}>
-
-        <div className="flex items-center flex-col p-3">
-
-
-
-          <div className="m-4 p-4">
-            <Link
-              to="/"
-              className="flex justify-center items-center"
-            >
-              <TimesLogo className={`h-20 w-[80px] fixed top-[60px] ${isSidebarOpen ? 'transition-all duration-300' : 'h-20 w-[30px] absolute left-[-5px]  transition-all duration-300'}`} />
-            </Link>
-            <div className={`p-2 text-center text-xs absolute top-[120px] left-[90px] ${isSidebarOpen ? '' : 'left-[-400px]'}`}>
-              <span className="whitespace-nowrap  ">DTU Times {new Date().getFullYear()}
-              </span>
-              <ul className="flex justify-center">
-
-                {/* {socialLinks.map((link, index) => (
+    <div className="min-h-[100vh] bg-[#252525] text-white w-[280px]">
+      <div className="flex flex-col p-4">
+        <div className="m-4 p-4">
+          <Link
+            to="/"
+            className="flex justify-center items-center"
+          >
+            <TimesLogo className="h-20" />
+          </Link>
+          <div className="p-2 ml-auto text-center text-xs">
+            <span>DTU Times {new Date().getFullYear()}</span>
+            <ul className="flex justify-center">
+              {/*
+              {socialLinks.map((link, index) => (
                 <li key={index}>
                   <ChevronDownIcon url={link.url} bgColor={link.bgColor} />
                 </li>
               ))}
             */}
-              </ul>
-              {/* <span className={`text-xs ${isSidebarOpen ? '' : 'hidden'}`}>
-                Got any issues? Contact the Developers.
-              </span> */}
-            </div>
+            </ul>
+            <span className="text-xs">
+              Got any issues? Contact the Developers.
+            </span>
           </div>
-          <div className={`flex-none w-64 mt-[105px] `}>
-            {items.map((item, index) => (
-              <div className="flex flex-col" key={`sidebar-root-${index}`}>
-                <div className="mt-[7px]">
-                  <SidebarItem items={item} isSidebarOpen={isSidebarOpen} setIsSidebarOpen={setIsSidebarOpen}/>
-
-                </div>
-              </div>
-
-            ))}
-          </div>
-
+        </div>
+        <div className="flex-none w-64 bg-[#252525] overflow-auto">
+          {items.map((item, index) => (
+            <SidebarItem
+              key={`sidebar-root-${index}`}
+              items={item}
+              is_expanded={index === open}
+              menu_open={() => openerFn(index)}
+            />
+          ))}
         </div>
       </div>
     </div>

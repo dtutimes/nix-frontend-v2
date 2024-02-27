@@ -1,5 +1,4 @@
 import TimesLogo from "@/assets/dtutimesIcon";
-import { Spinner } from "@/components/Spinner";
 import API from "@/services/API";
 import { useState, useContext } from "react";
 import { toast } from "react-toastify";
@@ -24,13 +23,14 @@ export default function ForgotPassword() {
 
 
     // Make a request to the backend API to initiate the forgot password process
+    const toast_id = toast.loading("Sending reset email!");
     await API.post("/auth/forgotPassword", { email }).then(() => {
       setLoading(false);
-      toast.success("Password reset email sent successfully. Check your inbox!");
+      toast.success("Password reset email sent");
     }).catch((e) => {
       setLoading(false);
       setError(e);
-    });
+    }).finally(() => toast.done(toast_id));
   };
 
   return (
@@ -65,9 +65,10 @@ export default function ForgotPassword() {
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={loading}
+              className="flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-white disabled:text-gray-700 disabled:opacity-20 disabled:border-gray-100 disabled:shadow-current disabled:shadow-md"
             >
-              {loading ? <Spinner /> : "Send Reset Email"}
+              Send Reset Email
             </button>
           </div>
         </form>

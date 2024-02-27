@@ -224,7 +224,7 @@ export default function NewStory() {
   return (
     <form className="max-w-4xl mx-auto my-10 p-8 bg-white shadow rounded">
       {/* {user ? <h1>{user.name}</h1> : <h1>HY</h1>} */}
-      <h1 className="text-4xl font-bold mb-4">
+      <h1>
         {/* <input
           className="text-4xl w-full mb-4 focus:outline-none leading-tight"
           id="title"

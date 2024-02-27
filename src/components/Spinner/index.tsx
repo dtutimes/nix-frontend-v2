@@ -1,6 +1,6 @@
 import clsx from "clsx";
 
-
+// todo: make them extended tailwind class, ofc not required, but still can do!
 const sizes = {
   sm: "h-4 w-4",
   md: "h-8 w-8",
@@ -13,8 +13,13 @@ const variants = {
   primary: "text-blue-600",
 };
 
+interface SpinnerProps {
+  size?: keyof typeof sizes;
+  variant?: keyof typeof variants;
+  className?: string;
+}
 
-export const Spinner = ({ size = "md", variant = "primary", className = "" }) => {
+export const Spinner = ({ size = "md", variant = "primary", className = "" }: SpinnerProps) => {
   return (
     <>
       <svg

@@ -13,7 +13,12 @@ const uri = API.getUri();
 
 export default function Dashbboard() {
   const { ready, user } = React.useContext(CurrUserCtx);
-  if (!ready) return <div className="flex w-full h-full justify-center items-center"><Spinner /></div>;
+  if (!ready)
+    return (
+      <div className="flex w-full h-full justify-center items-center">
+        <Spinner />
+      </div>
+    );
   return (
     <div className="flex justify-start flex-col xl:flex-row">
       <div className="flex justify-evenly flex-col lg:flex-row">
@@ -28,7 +33,11 @@ export default function Dashbboard() {
               </div>
             </div>
             <div className="flex mt-16 justify-center">
-              <AvatarImage alt={user.name} className="h-36 w-36" src={`${uri}/images/get-avatar/${user.id}?thumbnail=true`} />
+              <AvatarImage
+                alt={user.name}
+                className="h-36 w-36"
+                src={`${uri}/images/get-avatar/${user.id}?thumbnail=true`}
+              />
             </div>
           </div>
           <div className="bg-black p-6 text-center self-end">
@@ -37,18 +46,21 @@ export default function Dashbboard() {
           </div>
         </div>
         <div className="m-6 w-[300px] h-[464px] bg-id-back bg-cover border-black border-2 text-white rounded-xl overflow-hidden grid grid-rows-2">
-          <div className="self-start flex flex-col">
-          </div>
+          <div className="self-start flex flex-col"></div>
           <div className="bg-black bg-opacity-50 text-opacity-100 p-6 text-right self-end pl-14">
             <div className="text-lg font-semibold">{user.bio}</div>
           </div>
         </div>
       </div>
       <div className="p-8">
-        <h1 className="text-xl font-bold mb-4">Hello {user.name},</h1>
+        <h1>Hello {user.name},</h1>
         <p className="text-lg mb-4">Welcome to DTU Times!</p>
         <p>Well done on your role as {user.role}!</p>
-        <p className="text-sm my-4">This is your Dashboard where you can update your details shared with us! Make sure they are up-to-date as these are your official record available to DTU Times.</p>
+        <p className="text-sm my-4">
+          This is your Dashboard where you can update your details shared with
+          us! Make sure they are up-to-date as these are your official record
+          available to DTU Times.
+        </p>
       </div>
     </div>
   );

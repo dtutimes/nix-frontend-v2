@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TimesLogo from "@/assets/dtutimesIcon";
-import { Spinner } from "@/components/Spinner";
 import API from "@/services/API";
 import { toast } from "react-toastify";
 import { ErrorContext } from "@/contexts/error";
@@ -33,7 +32,7 @@ export default function ResetPassword() {
     await API.patch(`/auth/resetPassword/${token}`, { newPassword: password })
       .then((_) => {
         setLoading(false);
-        toast.success("Password reset successfully. You can now log in with your new password.");
+        toast.success("Password reset successfully");
         navigate("/login"); // Redirect the user to the login page
       }).catch(e => {
         setLoading(false);
@@ -91,9 +90,10 @@ export default function ResetPassword() {
           <div>
             <button
               type="submit"
-              className="flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              disabled={loading}
+              className="flex w-full justify-center rounded-md bg-gray-900 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:bg-white disabled:text-gray-700 disabled:opacity-20 disabled:border-gray-100 disabled:shadow-current disabled:shadow-md"
             >
-              {loading ? <Spinner /> : "Reset Password"}
+            Reset Password
             </button>
           </div>
         </form>

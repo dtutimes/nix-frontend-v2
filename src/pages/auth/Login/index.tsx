@@ -120,9 +120,7 @@ export default function Login() {
 
   if (loading) {
     return (
-      <div className="flex w-screen h-screen justify-center items-center">
-        <Spinner />
-      </div>
+      <div className="flex flex-grow w-screen h-screen justify-center items-center"><Spinner /></div>
     );
   }
   return (
