@@ -22,13 +22,13 @@ const TextEditor = ({value, onChange}) => {
     }}
         
     onReady={ editor => {
-      //console.log( 'Editor is ready to use!', editor );
+      //console.debug( 'Editor is ready to use!', editor );
     }}
     onBlur={ ( event, editor ) => {
-      // console.log( 'Blur.', editor );
+      // console.debug( 'Blur.', editor );
     } }
     onFocus={ ( event, editor ) => {  
-      //console.log( 'Focus.', editor );
+      //console.debug( 'Focus.', editor );
     } }
   />;
 };

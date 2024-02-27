@@ -21,5 +21,5 @@ server.get("/*", (req, res) => {
 
 const port = 5173;
 server.listen(port, function () {
-  console.log("Server listening on port " + port);
+  console.debug("Server listening on port " + port);
 });

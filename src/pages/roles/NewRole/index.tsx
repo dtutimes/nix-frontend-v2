@@ -32,7 +32,7 @@ const enum ActionType {
 }
 
 const reducer = (state: NewRoleState, action: { type: ActionType, payload }) => {
-  //console.log(action); (good way to keep track of state)
+  //console.debug(action); (good way to keep track of state)
   const updatedData = { ...state };
   switch (action.type) {
   //underscore convention from react docs

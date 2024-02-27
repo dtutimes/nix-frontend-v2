@@ -55,7 +55,7 @@ const getFilteredBlogs = (blogs, searchTerm) => {
   );
 };
 
-const tableHeaders = ["Last Published", "Author", "Title", "Category", "Status"];
+const tableHeaders = ["Published On", "Author", "Title", "Category", "Status"];
 
 const blogEndpoint = "/blog";
 
@@ -92,7 +92,7 @@ export default function PublishedStories() {
           fetchBlogs();
         })
         .catch((e) => setError(e));
-      console.log("story deleted");
+      console.debug("story deleted");
     }
   };
 
@@ -110,7 +110,7 @@ export default function PublishedStories() {
           fetchBlogs();
         })
         .catch((e) => setError(e));
-      console.log("story archived");
+      console.debug("story archived");
     }
   };
 
@@ -146,7 +146,7 @@ export default function PublishedStories() {
         <Table
           headers={tableHeaders}
           content={getFilteredBlogs(blogs, searchTerm).map(blog => [
-            new Date(blog.published_at).toLocaleDateString(),
+            <div key={blog._id} className="max-w-24">{new Date(blog.published_at).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })}</div>,
             blog.user.name,
             blog.title,
             BlogCategory[blog.category_id],
@@ -154,10 +154,10 @@ export default function PublishedStories() {
               // tailwind is compiled to real css, so we can't use dynamic tailwind wale class names
               // alternative fix is to re-export these class names in index.css
               // i'm lazy, so i just did this impl instead
-              className={`px-2 py-1 rounded-md ${BlogStatus[blog.status]}`}
+              className={`px-2 py-1 inline-block rounded-md ${BlogStatus[blog.status]}`}
               key={blog.category_id}
             >
-              <TagIcon className="w-4 h-4 inline-block mr-1" />
+              <TagIcon className="w-4 h-4 inline max-lg:hidden mr-1 size-min " />
               {BlogStatus[blog.status]}
             </span>,
             <MoreMenu

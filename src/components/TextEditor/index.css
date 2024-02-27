@@ -1,5 +1,5 @@
 .ck-editor__editable_inline {
-    min-height: 200px;
+    min-height: 100px;
 }
 
 .ck-content h2 {
@@ -9,5 +9,11 @@
     font-size: 1.17rem;
 }
 .ck-content h4 {
-    font-size: 1rem;
+    font-size: 1.10rem;
+}
+.ck-content ul{
+    padding-left: 20px;
+}
+.ck-content ol{
+    padding-left: 20px;
 }

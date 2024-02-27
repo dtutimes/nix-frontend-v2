@@ -7,7 +7,7 @@ export default function UserCard({ name, email, role, avatar }) {
           <div className="w-60 hover:shadow-xl bg-white px-10 py-8 rounded-lg shadow text-center">
             <div className="mb-3">
               <img
-                className="w-2/3 mx-auto rounded-full h-24 object-cover"
+                className="w-2/3 mx-auto rounded-full object-cover"
                 src={`${API.getUri()}/images/get-avatar/${avatar}?thumbnail=true`}
                 alt={name}
               />

@@ -48,16 +48,16 @@ const routeMap: CustomRouteElement[] = [
     permission: [Permission.ReadBlog],
     children: [
       {
-        path: "your-stories/",
-        element: <YourStories />,
-        label: "Your Stories",
-        permission: [Permission.ReadBlog],
-      },
-      {
         path: "new-story/",
         element: <NewStory />,
         label: "New Story",
         permission: [Permission.CreateBlog],
+      },
+      {
+        path: "your-stories/",
+        element: <YourStories />,
+        label: "Your Stories",
+        permission: [Permission.ReadBlog],
       },
       {
         path: "pending-stories/",

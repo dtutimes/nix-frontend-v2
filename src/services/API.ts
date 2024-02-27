@@ -43,7 +43,7 @@ const refresh = async () => {
     localStorage.setItem("token", response?.data?.data?.accessToken);
     return response.data.data.accessToken;
   } catch (err) {
-    console.log(err);
+    console.debug(err);
     return "";
   }
 };

@@ -73,8 +73,9 @@ export default function AllMembers() {
 
   //filter members based on search term
   const filteredMembers = membersList.filter((member) => {
-    const category = member[selectedCategory].toLowerCase();
-    return category.includes(searchTerm.toLowerCase());
+    const category = member[selectedCategory.toLowerCase()];
+    const categoryValue = category ? category.toString().toLowerCase() : "";
+    return categoryValue.includes(searchTerm.toLowerCase());
   });
 
   if (loading) return <div className="flex w-full h-full justify-center items-center"><Spinner /></div>;

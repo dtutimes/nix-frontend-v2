@@ -60,7 +60,7 @@ export default function AllRoles() {
             <div key={role.role_id}>
               <Collapsible label={role.role_name.charAt(0).toUpperCase() + role.role_name.slice(1).toLowerCase()}>
                 <h4>
-                  <ol className="flex flex-wrap gap-2">
+                  <ol className="flex flex-wrap gap-2 list-none">
                     {role.permissions.map((permissionId) => (
                       <li className="text-lg bg-blue-500 rounded-full px-3 py-1" key={permissionId}>{Permission[permissionId]} </li>
                     ))}

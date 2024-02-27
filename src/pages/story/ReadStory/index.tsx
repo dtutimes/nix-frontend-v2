@@ -3,7 +3,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import API from "@/services/API";
 import { toast } from "react-toastify";
-
 import { ErrorContext } from "@/contexts/error";
 
 import parse from "html-react-parser";
@@ -14,12 +13,12 @@ import { TagIcon } from "@/assets/TagIcon";
 
 import BlogStatus from "@/types/blogStatus";
 import { BlogDetails } from "@/types/blog";
+import "./index.css";
 
 interface ReadStoryState {
   showDTPicker: boolean;
   selectedDateTime: string;
   image: string;
-  loading: boolean;
 }
 
 //https://stackoverflow.com/questions/28760254/assign-javascript-date-to-html5-datetime-local-input
@@ -39,14 +38,12 @@ const initialState: ReadStoryState = {
   showDTPicker: false,
   selectedDateTime: getLocalDateTime(),
   image: "",
-  loading: true,
 };
 
 const enum ActionType {
   SetShowDTPicker,
   SetSelectedDateTime,
   SetImage,
-  SetLoading,
 }
 
 const reducer = (state: ReadStoryState, action: { type: ActionType, payload }) => {
@@ -60,9 +57,6 @@ const reducer = (state: ReadStoryState, action: { type: ActionType, payload }) =
     break;
   case ActionType.SetImage:
     updatedData.image = action.payload;
-    break;
-  case ActionType.SetLoading:
-    updatedData.loading = action.payload;
     break;
   default:
     return updatedData;
@@ -83,7 +77,6 @@ export default function ReadStory() {
     showDTPicker,
     selectedDateTime,
     image,
-    loading,
   } = state;
 
   const handlePublishNow = () => {
@@ -145,10 +138,9 @@ export default function ReadStory() {
 
   const fetchImage = () => {
     if (!blog.cover) {
-      dispatch({ type: ActionType.SetLoading, payload: false });
       return;
     }
-    const imageEndPoint = `/images/get/${blog.cover}`;
+    const imageEndPoint = `/images/get/${blog.cover}?thumbnail=1024`;
     API.get(imageEndPoint, { responseType: "arraybuffer" })
       .then((response) => {
         const imageBlob = new Blob([response.data], { type: "image/png" });
@@ -158,11 +150,9 @@ export default function ReadStory() {
           dispatch({ type: ActionType.SetImage, payload: imageDataUrl });
         };
         reader.readAsDataURL(imageBlob);
-        dispatch({ type: ActionType.SetLoading, payload: false });
       })
       .catch((error) => {
         setError(error);
-        dispatch({ type: ActionType.SetLoading, payload: false });
       });
   };
 
@@ -170,21 +160,22 @@ export default function ReadStory() {
     fetchImage();
   }, []);
 
-  if (loading) return <div className="flex justify-center items-center"><Spinner /></div>;
-
   return (
     <div className="max-w-4xl mx-auto my-10 p-8 bg-white shadow round">
       <h1 className="mb-10 text-4xl font-semibold text-center">{blog.title}</h1>
-      <h4 className="m-2 font-semibold text-gray-500">Created By {blog.user.name}, Last Updated on {new Date(blog.updatedAt).toLocaleDateString()} </h4>
+      <h4 className="m-2 font-semibold text-gray-500">Created By {blog.user.name}, Last Updated on {new Date(blog.updatedAt).toLocaleString(undefined, { dateStyle: "medium", timeStyle: "short" })} </h4>
       <span
-        className={`m-2 px-2 py-1 rounded-md ${BlogStatus[blog.status]}`}
+        className={`px-2 py-1 inline-block rounded-md ${BlogStatus[blog.status]}`}
         key={blog.category_id}
       >
-        <TagIcon className="w-4 h-4 inline-block mr-1" />
+        <TagIcon className="w-4 h-4 inline mr-1 size-min "/>
         {BlogStatus[blog.status]}
-      </span>d
+      </span>
       <div className="m-2 mt-5 break-words">
-        <div>  {blog.cover ? <img className="object-contain h-3/6 w-3/6" src={image} alt="Cover Image" /> : <>Cover image not uploaded!</>} </div>
+        <div>  {blog.cover ?
+          (image === "") ? <center><Spinner className="flex justify-center items-center" /> Loading Image</center> : <img className="object-contain h-3/6 w-3/6" src={image} alt="Cover Image" />
+          : <>Cover image not uploaded!</>}
+        </div>
         <div className="mt-2 mb-2 text-gray-500"> {blog.byliner} </div>
         <div className="text-gray-900 leading-relaxed"> {parse(blog.body)} </div>
       </div>

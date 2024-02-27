@@ -92,7 +92,7 @@ export default function NewStory() {
             onUploadProgress: (progressEvent) => {
               const progress = progressEvent.loaded / progressEvent.total;
               const percentCompleted = Math.round(progress * 100);
-              console.log(progress);
+              console.debug(progress);
               toast.update(toastId.current, {
                 render: `Uploading ${percentCompleted}%`,
                 type: "info",
@@ -180,7 +180,7 @@ export default function NewStory() {
   };
 
   const handleSubmit = (e, saveAsDraft: boolean) => {
-    console.log(saveAsDraft);
+    console.debug(saveAsDraft);
     e.preventDefault();
     if (!title || !byliner || !metaDescription || !metaTitle || !slug) {
       toast.error("Please fill out all the required fields.");
@@ -200,7 +200,7 @@ export default function NewStory() {
       cover: blogImage,
     };
 
-    console.log(request);
+    console.debug(request);
     const endPoint = draftBlog
       ? `/blog/update-blog/${draftBlog._id}`
       : "/blog/create-blog";
@@ -242,7 +242,11 @@ export default function NewStory() {
           autoFocus={true}
           value={title}
           onChange={handleInput}
+          maxLength={75}
         />
+        <div className="w-full font-medium text-sm flex flex-row-reverse">
+          {title.length}/75
+        </div>
       </h1>
       <div className="mb-6">
         <label className="block mb-2" htmlFor="byliner">

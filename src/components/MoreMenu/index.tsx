@@ -20,12 +20,27 @@ interface MoreMenuProps {
 //after one click on it
 export default function MoreMenu({ options, blogId }: MoreMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [menuDirection, setMenuDirection] = useState("down");
   const menuRef = useRef(null);
 
   const handleOptionFunction = (handler) => {
-    console.log(blogId);
+    console.debug(blogId);
     handler(blogId);
     setIsOpen(false);
+  };
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+
+    // Check if the menu is in the lower half of the viewport
+    if (
+      menuRef.current.getBoundingClientRect().top >
+      window.innerHeight * 0.75
+    ) {
+      setMenuDirection("up");
+    } else {
+      setMenuDirection("down");
+    }
   };
 
   // const handleEdit = () => {
@@ -59,7 +74,7 @@ export default function MoreMenu({ options, blogId }: MoreMenuProps) {
     <div className="relative text-left" ref={menuRef}>
       <div>
         <button
-          onClick={() => setIsOpen(!isOpen)}
+          onClick={toggleMenu}
           type="button"
           className="px-2 py-1  text-black"
         >
@@ -67,7 +82,11 @@ export default function MoreMenu({ options, blogId }: MoreMenuProps) {
         </button>
       </div>
       {isOpen && (
-        <div className="z-10 origin-top-right absolute  bg-gray-200 rounded-md shadow-md">
+        <div
+          className={`z-10 origin-top-right absolute ${
+            menuDirection === "up" ? "bottom-full" : "top-full"
+          } bg-gray-200 rounded-md shadow-md`}
+        >
           {options
             .filter((option) => option.show)
             .map((option, index) => (
