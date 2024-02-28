@@ -40,7 +40,7 @@ function SidebarItem({ items, isSidebarOpen, setIsSidebarOpen }: { items: RouteE
                 {items.label}
               </span>
             </div>
-            <div className={`ml-3 ${isSidebarOpen ? 'transition-all duration-600' : 'opacity-0 transition-all duration-600'}`}>
+            <div className={`ml-3 ${isSidebarOpen ? 'transition-all duration-600' : 'hidden transition-all duration-600'}`}>
               {open ? <UpArrow /> : <DownArrow />}
             </div>
           </div>

@@ -39,7 +39,6 @@ const routeMap: CustomRouteElement[] = [
     label: "Dashboard",
     icon: <DashIcon/>,
   },
-  
   {
     path: "story/",
     element: <><Outlet /></>,
