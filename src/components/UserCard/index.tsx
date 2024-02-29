@@ -1,5 +1,4 @@
 import API from "@/services/API";
-
 export default function UserCard({ name, email, role, avatar }) {
   return (
     <div id="container" className="mx-auto ">
@@ -17,10 +16,7 @@ export default function UserCard({ name, email, role, avatar }) {
             <span className="text-blue-500 block ">{role}</span>
             <div className="text-sm text-gray-500 block mb-5">{email}</div>
             {/** todo: add link to profile */}
-            <a
-              href="#"
-              className="px-4 py-2 bg-blue-500 text-white rounded-full"
-            >
+            <a href="#" className="px-4 py-2 bg-blue-500 text-white rounded-full">
               Profile
             </a>
           </div>

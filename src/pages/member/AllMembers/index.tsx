@@ -23,27 +23,24 @@ const enum ActionType {
   SetLoading,
 }
 
-const reducer = (
-  state: typeof initialState,
-  action: { type: ActionType; payload },
-) => {
+const reducer = (state: typeof initialState, action: { type: ActionType, payload }) => {
   const updatedData = { ...state };
   switch (action.type) {
-    //underscore convention from react docs
-    case ActionType.SetMemberList:
-      updatedData.membersList = action.payload;
-      break;
-    case ActionType.SetSearchTerm:
-      updatedData.searchTerm = action.payload;
-      break;
-    case ActionType.SetSelectedCategory:
-      updatedData.selectedCategory = action.payload;
-      break;
-    case ActionType.SetLoading:
-      updatedData.loading = action.payload;
-      break;
-    default:
-      return updatedData;
+  //underscore convention from react docs
+  case ActionType.SetMemberList:
+    updatedData.membersList = action.payload;
+    break;
+  case ActionType.SetSearchTerm:
+    updatedData.searchTerm = action.payload;
+    break;
+  case ActionType.SetSelectedCategory:
+    updatedData.selectedCategory = action.payload;
+    break;
+  case ActionType.SetLoading:
+    updatedData.loading = action.payload;
+    break;
+  default:
+    return updatedData;
   }
   return updatedData;
 };
@@ -52,17 +49,20 @@ export default function AllMembers() {
   const { setError } = React.useContext(ErrorContext);
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
-  const { membersList, searchTerm, selectedCategory, loading } = state;
+  const {
+    membersList,
+    searchTerm,
+    selectedCategory,
+    loading,
+  } = state;
+
 
   useEffect(() => {
     const membersEndpoint = "/user";
 
     API.get(membersEndpoint)
       .then((membersResponse) => {
-        dispatch({
-          type: ActionType.SetMemberList,
-          payload: membersResponse.data.data,
-        });
+        dispatch({ type: ActionType.SetMemberList, payload: membersResponse.data.data });
         dispatch({ type: ActionType.SetLoading, payload: false });
       })
       .catch((error) => {
@@ -78,44 +78,29 @@ export default function AllMembers() {
     return categoryValue.includes(searchTerm.toLowerCase());
   });
 
-  if (loading)
-    return (
-      <div className="flex flex-grow w-full h-full justify-center items-center">
-        <Spinner />
-      </div>
-    );
+  if (loading) return <div className="flex w-full h-full justify-center items-center"><Spinner /></div>;
 
   return (
     <div className="max-w-4xl mx-auto py-12">
-      <h1>All Members</h1>
+      <h1 className="text-4xl font-semibold text-center">All Members</h1>
       <p className="text-lg text-center mt-4 mb-10">
         List of all the members of the DTU Times team.
       </p>
       <div className="px-3">
         <SearchBar
           searchTerm={searchTerm}
-          onSearch={(value) =>
-            dispatch({ type: ActionType.SetSearchTerm, payload: value })
-          }
+          onSearch={(value) => dispatch({ type: ActionType.SetSearchTerm, payload: value })}
           categories={categories}
           selectedCategory={selectedCategory}
-          onCategoryChange={(value) =>
-            dispatch({ type: ActionType.SetSelectedCategory, payload: value })
-          }
+          onCategoryChange={(value) => dispatch({ type: ActionType.SetSelectedCategory, payload: value })}
         />
       </div>
-
+      
       <div className="w-full  gap-4 flex-wrap flex justify-center items-center">
         {filteredMembers.map((member) => (
           <div key={member.id}>
-            <UserCard
-              name={member.name}
-              role={member.role}
-              email={member.email}
-              avatar={member.id}
-            />
-          </div>
-        ))}
+            <UserCard name={member.name} role={member.role} email={member.email} avatar={member.id} />
+          </div>))}
       </div>
     </div>
   );

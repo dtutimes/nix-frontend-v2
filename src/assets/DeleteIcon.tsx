@@ -18,3 +18,4 @@ export default function TrashIcon(props) {
     </svg>
   );
 }
+  

@@ -1,5 +1,6 @@
 import SideNavigation from "@/components/SideNavigation/sideNavigation";
 
+
 const Layout = ({ children }) => {
   return (
     <div className="flex">
