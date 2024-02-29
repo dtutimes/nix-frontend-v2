@@ -3,7 +3,9 @@ import { GrantedPermissions, IUser } from "@/types/contextTypes";
 
 export const getUserFromStorage = () => {
   const data = localStorage.getItem("user");
-  if (!data) { return null; }
+  if (!data) {
+    return null;
+  }
   try {
     const user = JSON.parse(data);
     return getUserFromJSON(user);
@@ -22,7 +24,9 @@ export const getTokenFromStorage = () => {
 };
 
 export const getUserFromJSON = (user_data) => {
-  if (!user_data) { return null; }
+  if (!user_data) {
+    return null;
+  }
 
   const user = {
     name: user_data.name,
@@ -31,10 +35,12 @@ export const getUserFromJSON = (user_data) => {
     bio: user_data.bio,
     role: user_data.role,
     permission: user_data.permission,
-    is_superuser: user_data.is_superuser
+    is_superuser: user_data.is_superuser,
   } as IUser;
 
-  const permissions = (user_data.is_superuser ? "*" : user_data.permission as Permission[]) as GrantedPermissions;
+  const permissions = (
+    user_data.is_superuser ? "*" : (user_data.permission as Permission[])
+  ) as GrantedPermissions;
   if (user.name && user.email && user.id && user.role) {
     return { user: user, permissions: permissions };
   } else {

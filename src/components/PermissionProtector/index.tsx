@@ -10,16 +10,27 @@ interface PermissionProtectorProps {
   silent?: boolean;
 }
 
-export const PermissionProtector: React.FC<PermissionProtectorProps> = ({ children, permission: required_permissions = [], silent = false }) => {
+export const PermissionProtector: React.FC<PermissionProtectorProps> = ({
+  children,
+  permission: required_permissions = [],
+  silent = false,
+}) => {
   const { grantedPermissions, ready } = React.useContext(CurrUserCtx);
   const { setFailedPermissions } = React.useContext(PermErrCtx);
 
-  if (!required_permissions || required_permissions?.length === 0 || grantedPermissions === "*") return children;
+  if (
+    !required_permissions ||
+    required_permissions?.length === 0 ||
+    grantedPermissions === "*"
+  )
+    return children;
 
   if (!ready) return <div className="flex w-full h-full justify-center items-center"><Spinner /></div>;
 
   if (grantedPermissions && grantedPermissions.length > 0) {
-    const failedPerm = (required_permissions).filter((permission) => !grantedPermissions.includes(permission));
+    const failedPerm = required_permissions.filter(
+      (permission) => !grantedPermissions.includes(permission),
+    );
     if (failedPerm.length > 0) {
       if (!silent) setFailedPermissions(failedPerm);
       return <></>;

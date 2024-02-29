@@ -1,8 +1,11 @@
 import Multiselect from "multiselect-react-dropdown";
 
-
-
-const MyMultiselect = ({ options, selectedOptions, onSelectionChange, isSingleSelect}) => {
+const MyMultiselect = ({
+  options,
+  selectedOptions,
+  onSelectionChange,
+  isSingleSelect,
+}) => {
   return (
     <Multiselect
       options={options}

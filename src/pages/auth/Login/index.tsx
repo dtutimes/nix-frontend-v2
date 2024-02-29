@@ -120,7 +120,7 @@ export default function Login() {
 
   if (loading) {
     return (
-      <div className="flex w-screen h-screen justify-center items-center">
+      <div className="flex flex-grow w-screen h-screen justify-center items-center">
         <Spinner />
       </div>
     );
@@ -197,7 +197,6 @@ export default function Login() {
         </form>
         <div className="text-sm text-right mt-2">
           <button
-          type="button"
             onClick={() => navigate("/forgot-password")}
             className="font-semibold text-gray-900 hover:text-indigo-500"
           >

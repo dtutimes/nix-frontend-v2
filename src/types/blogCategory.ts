@@ -1,8 +1,8 @@
 export enum BlogCategory {
-    Editorial,
-    Blog,
-    Interview,
-    Edition,
+  Editorial,
+  Blog,
+  Interview,
+  Edition,
 }
 
 export default BlogCategory;

@@ -19,7 +19,7 @@ const AppRoute = () => {
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/" element={<HomePage />} />
             <Route path="/*" element={<ProtectedRoute />} />
-          </Routes >
+          </Routes>
         </CurrUserCtxProvider>
       </PermErrCtxProvider>
     </ErrorCtxProvider>

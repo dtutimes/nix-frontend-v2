@@ -7,7 +7,7 @@ export interface Blog {
     id: string;
     name: string;
     email: string;
-  }
+  };
   title: string;
   byliner: string;
   slug: string;

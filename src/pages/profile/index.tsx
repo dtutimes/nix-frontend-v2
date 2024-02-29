@@ -19,16 +19,18 @@ const enum ActionType {
   SetPermission,
 }
 
-const reducer = (state: typeof initialState, action: { type: ActionType, payload }) => {
+const reducer = (
+  state: typeof initialState,
+  action: { type: ActionType; payload },
+) => {
   const updatedData = { ...state };
   switch (action.type) {
-  default:
-    return updatedData;
+    default:
+      return updatedData;
   }
   return updatedData;
 };
 
 export default function Profile() {
   const [state, dispatch] = useReducer(reducer, initialState);
-
 }

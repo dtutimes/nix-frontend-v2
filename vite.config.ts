@@ -7,11 +7,14 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": fileURLToPath(new URL("./src", import.meta.url))
-    }
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
+    },
   },
   esbuild: {
-    drop: process.env.NODE_ENV == "production" ? ["console", "debugger"] : undefined,
+    drop:
+      process.env.NODE_ENV == "production"
+        ? ["console", "debugger"]
+        : undefined,
     pure: ["console.error"],
-  }
+  },
 });

@@ -1,11 +1,18 @@
 import React, { useEffect } from "react";
-import { CurrentUserCtxType, GrantedPermissions, IUser } from "@/types/contextTypes";
+import {
+  CurrentUserCtxType,
+  GrantedPermissions,
+  IUser,
+} from "@/types/contextTypes";
 import { getUserFromStorage } from "@/services/localStorageParser";
 
 export const CurrUserCtx = React.createContext<CurrentUserCtxType | null>(null);
 
-const CurrUserCtxProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [grantedPermissions, setGrantedPermissions] = React.useState<GrantedPermissions>(null);
+const CurrUserCtxProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [grantedPermissions, setGrantedPermissions] =
+    React.useState<GrantedPermissions>(null);
   const [user, setUserData] = React.useState<IUser>(null);
   const [isReady, setIsReady] = React.useState<boolean>(false);
 
@@ -31,14 +38,18 @@ const CurrUserCtxProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <CurrUserCtx.Provider value={{
-      user,
-      setGrantedPermissions: setPermissions,
-      grantedPermissions,
-      setUser: setUser,
-      ready: isReady,
-      setReady: () => { setIsReady(true); }
-    }}>
+    <CurrUserCtx.Provider
+      value={{
+        user,
+        setGrantedPermissions: setPermissions,
+        grantedPermissions,
+        setUser: setUser,
+        ready: isReady,
+        setReady: () => {
+          setIsReady(true);
+        },
+      }}
+    >
       {children}
     </CurrUserCtx.Provider>
   );

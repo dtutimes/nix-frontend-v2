@@ -32,7 +32,7 @@ API.interceptors.response.use(
 
     //here redirect to login page
     return Promise.reject(error);
-  }
+  },
 );
 
 const refresh = async () => {
