@@ -1,3 +1,6 @@
+# Ignore specific files
+temp_sideNavigation.tsx
+temp_sideNavItems.tsx
 # Logs
 logs
 *.log
