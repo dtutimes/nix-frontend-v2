@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import API from "@/services/API";
@@ -12,7 +13,6 @@ import MyMultiselect from "@/components/MultiSelect";
 import Permission from "@/types/permissions";
 import { Role } from "@/types/role";
 import { PermissionProtector } from "@/components/PermissionProtector";
-
 
 interface PermissionItem {
   name: string;
@@ -59,8 +59,6 @@ export default function EditMember() {
   const toastId = React.useRef(null);
   const { id } = useParams<{ id: string }>();
 
-  const target_user = user; //todo
-
   const initialState: EditMemberState = {
     target_name: null,
     target_email: "",
@@ -98,7 +96,7 @@ export default function EditMember() {
       })),
     });
     dispatch({ type: ActionType.setRoleId, payload: roleData.id });
-    dispatch({ type: ActionType.setRoleName, payload: roleData.name});
+    dispatch({ type: ActionType.setRoleName, payload: roleData.name });
   };
 
   const reducer = (
@@ -207,13 +205,8 @@ export default function EditMember() {
     target_name,
     target_email,
     target_bio,
-    // linkedin,
-    // website,
-    // facebook,
-    // instagram,
     newPassword,
     confirmPassword,
-    // username,
     profilePicture,
     showPassword,
     showConfirmPassword,
@@ -222,23 +215,6 @@ export default function EditMember() {
     target_roleName,
     target_selectedPermissions,
   } = state;
-
-  const fetchRoles = () => {
-    const rolesEndpoint = "/role";
-
-    API.get(rolesEndpoint)
-      .then((rolesResponse) => {
-        dispatch({
-          type: ActionType.setRolesList,
-          payload: rolesResponse.data.data,
-        });
-        dispatch({ type: ActionType.setLoading, payload: false });
-      })
-      .catch((error) => {
-        setError(error);
-        dispatch({ type: ActionType.setLoading, payload: false });
-      });
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -276,34 +252,47 @@ export default function EditMember() {
       .catch((e) => setError(e));
   };
 
+  const fetchRoles = () => {
+    const rolesEndpoint = "/role";
+
+    return API.get(rolesEndpoint).then((rolesResponse) => {
+      dispatch({
+        type: ActionType.setRolesList,
+        payload: rolesResponse.data.data,
+      });
+    });
+  };
+
   const fetchTargetUser = () => {
     if (id) {
-      API.get(`/user/get-user/${id}`)
-        .then((response) => {
-          const userData = response.data.data;
-          dispatch({ type: ActionType.UpdateName, payload: userData.name });
-          dispatch({ type: ActionType.UpdateName, payload: userData.name });
-          dispatch({ type: ActionType.UpdateEmail, payload: userData.email });
-          dispatch({ type: ActionType.UpdateBio, payload: userData.bio || "" });
-          dispatch({
-            type: ActionType.setSelectedPermissions,
-            payload: userData.permission.map((index) => ({
-              name: Permission[index],
-              id: index,
-            })),
-          });
-          dispatch({ type: ActionType.setRoleId, payload: userData.role_id });
-          dispatch({ type: ActionType.setRoleName, payload: userData.role });
-        })
-        .catch((e) => {
-          setError(e);
+      return API.get(`/user/get-user/${id}`).then((response) => {
+        const userData = response.data.data;
+        dispatch({ type: ActionType.UpdateName, payload: userData.name });
+        dispatch({ type: ActionType.UpdateName, payload: userData.name });
+        dispatch({ type: ActionType.UpdateEmail, payload: userData.email });
+        dispatch({ type: ActionType.UpdateBio, payload: userData.bio || "" });
+        dispatch({
+          type: ActionType.setSelectedPermissions,
+          payload: userData.permission.map((index) => ({
+            name: Permission[index],
+            id: index,
+          })),
         });
-    }
+        dispatch({ type: ActionType.setRoleId, payload: userData.role_id });
+        dispatch({ type: ActionType.setRoleName, payload: userData.role });
+        dispatch({type: ActionType.UpdateProfilePictureLink, payload: userData.id})
+      });
+    } //TODO handle if no id present
   };
 
   React.useEffect(() => {
-    fetchRoles();
-    fetchTargetUser();
+    Promise.all([fetchRoles(), fetchTargetUser()])
+      .then(() => {
+        dispatch({ type: ActionType.setLoading, payload: false });
+      })
+      .catch((error) => {
+        setError(error);
+      });
   }, []);
 
   return (
@@ -312,10 +301,24 @@ export default function EditMember() {
       <form className="space-y-6 mt-4" onSubmit={handleSubmit}>
         <hr className="border-t border-gray-300 mt-6 mb-6 w-full" />
         <div className="space-y-2">
+          {/* //todo make this to the right of name and username */}
+        {profilePicture ? (
+          <div className="flex items-center justify-center ">
+            <AvatarImage
+              className="h-36 w-36 rounded-full"
+              user_id={profilePicture}
+              thumbnail={true}
+              alt={profilePicture}
+            />
+            </div>
+          ) : (
+            <></>
+          )}
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label className="block font-semibold text-sm mb-2 ">Name</label>
               <input
+                disabled={id !== user.id}
                 type="name"
                 name="name"
                 value={target_name}
@@ -336,6 +339,7 @@ export default function EditMember() {
               Email Address
             </label>
             <input
+              disabled={id !== user.id}
               type="email"
               name="email"
               value={target_email}
@@ -354,6 +358,7 @@ export default function EditMember() {
               About You
             </label>
             <textarea
+              disabled={id !== user.id}
               name="about"
               value={target_bio}
               onChange={(e) =>
@@ -371,6 +376,7 @@ export default function EditMember() {
               Profile picture
             </label>
             <input
+              disabled={id !== user.id}
               type="file"
               id="blog-image"
               accept="image/png, image/jpeg, image/jpg"
@@ -383,90 +389,82 @@ export default function EditMember() {
               className="border p-2 rounded"
             />
           </div>
-          {profilePicture ? (
-            <AvatarImage
-              className="max-w-md max-h-md"
-              user_id={profilePicture}
-              thumbnail={true}
-              alt={profilePicture}
-            />
-          ) : (
-            <></>
-          )}
+          
         </div>
-
-        <div className="relative">
-          <h1 className="text-2xl text-left mb-4">Update Password</h1>
-          <div className="relative w-1/2">
-            <label className="block text-sm font-semibold mb-2">
-              New Password
-            </label>
-            <input
-              type={showPassword ? "text" : "password"}
-              name="newPassword"
-              value={newPassword}
-              onChange={(e) =>
-                dispatch({
-                  type: ActionType.UpdatePassword,
-                  payload: e.target.value,
-                })
-              }
-              placeholder="New Password"
-              className="border p-2 rounded w-full mb-2"
-            />
-            <div
-              className="absolute inset-y-0 right-0 pr-3 pt-4 flex items-center cursor-pointer"
-              onClick={(e) =>
-                dispatch({
-                  type: ActionType.ToggleShowPassword,
-                  payload: !showPassword,
-                })
-              }
-            >
-              <img
-                src={showPassIcon}
-                alt="toggle password visibility"
-                className="w-6 h-6"
+        {id === user.id && (
+          <div className="relative">
+            <h1 className="text-2xl text-left mb-4">Update Password</h1>
+            <div className="relative w-1/2">
+              <label className="block text-sm font-semibold mb-2">
+                New Password
+              </label>
+              <input
+                type={showPassword ? "text" : "password"}
+                name="newPassword"
+                value={newPassword}
+                onChange={(e) =>
+                  dispatch({
+                    type: ActionType.UpdatePassword,
+                    payload: e.target.value,
+                  })
+                }
+                placeholder="New Password"
+                className="border p-2 rounded w-full mb-2"
               />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 pt-4 flex items-center cursor-pointer"
+                onClick={(e) =>
+                  dispatch({
+                    type: ActionType.ToggleShowPassword,
+                    payload: !showPassword,
+                  })
+                }
+              >
+                <img
+                  src={showPassIcon}
+                  alt="toggle password visibility"
+                  className="w-6 h-6"
+                />
+              </div>
             </div>
-          </div>
-          <div className="relative w-1/2">
-            <label className="block text-sm font-semibold mb-2">
-              Confirm Password
-            </label>
-            <input
-              type={showConfirmPassword ? "text" : "password"}
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) =>
-                dispatch({
-                  type: ActionType.UpdateConfirmPassword,
-                  payload: e.target.value,
-                })
-              }
-              placeholder="Confirm Password"
-              className="border p-2 rounded w-full"
-            />
-            <div
-              className="absolute inset-y-0 right-0 pr-3 pt-5 flex items-center cursor-pointer"
-              onClick={(e) =>
-                dispatch({
-                  type: ActionType.ToggleShowConfirmPassword,
-                  payload: !showPassword,
-                })
-              }
-            >
-              <img
-                src={showPassIcon}
-                alt="toggle password visibility"
-                className="w-6 h-6"
+            <div className="relative w-1/2">
+              <label className="block text-sm font-semibold mb-2">
+                Confirm Password
+              </label>
+              <input
+                type={showConfirmPassword ? "text" : "password"}
+                name="confirmPassword"
+                value={confirmPassword}
+                onChange={(e) =>
+                  dispatch({
+                    type: ActionType.UpdateConfirmPassword,
+                    payload: e.target.value,
+                  })
+                }
+                placeholder="Confirm Password"
+                className="border p-2 rounded w-full"
               />
+              <div
+                className="absolute inset-y-0 right-0 pr-3 pt-5 flex items-center cursor-pointer"
+                onClick={(e) =>
+                  dispatch({
+                    type: ActionType.ToggleShowConfirmPassword,
+                    payload: !showPassword,
+                  })
+                }
+              >
+                <img
+                  src={showPassIcon}
+                  alt="toggle password visibility"
+                  className="w-6 h-6"
+                />
+              </div>
             </div>
+            <small className="block text-xs mt-2 text-slate-500">
+              You can enter the same password or update your password.
+            </small>
           </div>
-          <small className="block text-xs mt-2 text-slate-500">
-            You can enter the same password or update your password.
-          </small>
-        </div>
+        )}
         <PermissionProtector permission={[Permission.UpdateRole]} silent={true}>
           <div className="flex flex-col">
             <h1 className="text-2xl text-left font-medium leading-none my-6">
@@ -510,14 +508,22 @@ export default function EditMember() {
             </div>
           </div>
         </PermissionProtector>
-
+        <button
+          type="button"
+          className="bg-gray-200 text-black p-3 rounded hover:bg-indigo-500 hover:text-white mx-2"
+          onClick={() => {navigate(-1)}}
+        >
+          Cancel Update
+        </button>
         <button
           type="submit"
-          className="bg-blue-500 text-white p-3 rounded hover:bg-green-500"
+          className="bg-green-500 text-white p-3 rounded hover:bg-indigo-500 mx-2"
           onClick={handleSubmit}
         >
           Update Info
         </button>
+       
+        
       </form>
     </div>
   );
