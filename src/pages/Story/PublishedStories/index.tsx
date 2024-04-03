@@ -60,7 +60,7 @@ const reducer = (
   return updatedData;
 };
 
-const getFilteredBlogs = (blogs, searchTerm) => {
+const getFilteredBlogs = (blogs, searchTerm, currentPage: number) => {
   return blogs.filter((blog) =>
     blog?.title.toLowerCase().includes(searchTerm.toLowerCase()),
   );
@@ -78,7 +78,7 @@ export default function PublishedStories() {
   const { blogs, searchTerm, loading } = state;
   const indexOfLastBlog = state.currentPage * state.perPage;
   const indexOfFirstBlog = indexOfLastBlog - state.perPage;
-  const filteredBlogs = getFilteredBlogs(blogs, searchTerm);
+  const filteredBlogs = getFilteredBlogs(blogs, searchTerm, state.currentPage);
   const paginatedBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
   function Pagination() {
     const { currentPage, perPage } = state;
@@ -215,7 +215,8 @@ export default function PublishedStories() {
 
   useEffect(() => {
     fetchBlogs();
-  }, [state.currentPage, searchTerm]);
+    dispatch({ type: ActionType.SetCurrentPage, payload: 1 });
+  }, [searchTerm]);
 
   if (loading)
     return (

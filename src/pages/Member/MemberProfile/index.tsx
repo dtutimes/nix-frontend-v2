@@ -118,7 +118,7 @@ export default function MemberProfile() {
             </div>
           </div>
         </div>
-        <p className="mb-6 font-normal text-gray-600 text-lg">
+        <p className="mb-6 font-normal text-gray-600 text-lg break-words">
           {userDetails.bio || "No bio available"}
         </p>
         <hr className="border-t border-gray-300 mt-6 mb-6 w-full" />
