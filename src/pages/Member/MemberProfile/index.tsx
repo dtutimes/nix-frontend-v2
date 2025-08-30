@@ -5,7 +5,13 @@ import { CurrUserCtx } from "@/contexts/current_user";
 import { ErrorContext } from "@/contexts/error";
 import API from "@/services/API";
 import { IUser } from "@/commonlib/types/frontend/contextTypes";
-import { MainWebsiteRole } from "@/types/mainWebsiteRole";
+// import { MainWebsiteRole } from "@/commonlib/types/mainWebsiteRole";
+// Temporary type for build
+type MainWebsiteRole = {
+  _id: string;
+  name: string;
+  description?: string;
+};
 import Permission from "@/commonlib/types/permissions";
 import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";

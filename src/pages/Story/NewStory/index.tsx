@@ -1,10 +1,12 @@
 import { NixImage } from "@/components/NixImage";
 import TextEditor from "@/components/TextEditor";
+import { TagManager } from "@/components/TagManager";
 import { CurrUserCtx } from "@/contexts/current_user";
 import { ErrorContext } from "@/contexts/error";
 import API, { refreshAuthToken } from "@/services/API";
 import BlogCategory from "@/types/blogCategory";
 import BlogStatus from "@/types/blogStatus";
+import { ITag } from "@/commonlib/types/tags";
 import { useContext, useEffect, useReducer, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -20,6 +22,7 @@ interface NewStoryState {
   blogImage: string | null;
   metaDescription: string;
   metaTitle: string;
+  tags: ITag[];
 }
 
 const initialState: NewStoryState = {
@@ -32,6 +35,7 @@ const initialState: NewStoryState = {
   blogImage: null,
   metaDescription: "",
   metaTitle: "",
+  tags: [],
 };
 
 const enum ActionType {
@@ -44,6 +48,9 @@ const enum ActionType {
   SetMetaDescription,
   SetMetaTitle,
   SetBlogImageLink,
+  SetTags,
+  AddTag,
+  RemoveTag,
 }
 
 export default function NewStory() {
@@ -141,6 +148,15 @@ export default function NewStory() {
       case ActionType.SetBlogImageLink:
         updatedData.blogImage = action.payload;
         break;
+      case ActionType.SetTags:
+        updatedData.tags = action.payload;
+        break;
+      case ActionType.AddTag:
+        updatedData.tags = [...state.tags, action.payload];
+        break;
+      case ActionType.RemoveTag:
+        updatedData.tags = state.tags.filter((_, index) => index !== action.payload);
+        break;
       default:
         return updatedData;
     }
@@ -159,6 +175,7 @@ export default function NewStory() {
     blogImage,
     metaDescription,
     metaTitle,
+    tags,
   } = state;
 
   useEffect(() => {
@@ -183,6 +200,10 @@ export default function NewStory() {
         type: ActionType.SetMetaTitle,
         payload: draftBlog.meta_title,
       });
+      // Load existing tags if available
+      if (draftBlog.tags) {
+        dispatch({ type: ActionType.SetTags, payload: draftBlog.tags });
+      }
     }
   }, []);
 
@@ -211,6 +232,7 @@ export default function NewStory() {
       user_id: user.id,
       status: saveAsDraft ? BlogStatus.Draft : BlogStatus.Pending,
       cover: blogImage,
+      tags: tags,
     };
 
     console.debug(request);
@@ -290,6 +312,12 @@ export default function NewStory() {
           </div>
         </div>
       </div>
+
+      {/* Tag Manager for credits */}
+      <TagManager 
+        tags={tags}
+        onTagsChange={(newTags) => dispatch({ type: ActionType.SetTags, payload: newTags })}
+      />
 
       <h2 className="text-2xl font-semibold mb-4">SEO Details</h2>
       <div className="mb-6">

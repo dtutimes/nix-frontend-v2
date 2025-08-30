@@ -8,6 +8,7 @@ import { ErrorContext } from "@/contexts/error";
 import parse from "html-react-parser";
 
 import { Spinner } from "@/components/Spinner";
+import { TagDisplay } from "@/components/TagDisplay";
 
 import { TagIcon } from "@/assets/TagIcon";
 
@@ -240,6 +241,10 @@ export default function ReadStory() {
           )}
         </div>
         <div className="mt-2 mb-2 text-gray-500"> {blog.byliner} </div>
+        
+        {/* Display tags/credits */}
+        <TagDisplay tags={blog.tags || []} />
+        
         <div className="text-gray-900 leading-relaxed">
           {" "}
           {parse(blog.body)}{" "}
