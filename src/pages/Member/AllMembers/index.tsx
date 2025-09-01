@@ -1,13 +1,12 @@
-import Pagination from "@/components/Pagination";
+// import Pagination from "@/components/Pagination";
 import SearchBar from "@/components/SearchBar";
 import { Spinner } from "@/components/Spinner";
 import UserCard from "@/components/UserCard";
 import { ErrorContext } from "@/contexts/error";
 import API from "@/services/API";
-import {Member} from "@/commonlib/types/member";
-import React from "react";
-import { useEffect } from "react";
-import { MEMBERS_PER_PAGE as perPage } from "@/config";
+import { Member } from "@/commonlib/types/member";
+import React, { useEffect } from "react";
+// import { MEMBERS_PER_PAGE as perPage } from "@/config";
 
 const initialState = {
   membersList: [] as Member[],
@@ -25,11 +24,10 @@ const enum ActionType {
 
 const reducer = (
   state: typeof initialState,
-  action: { type: ActionType; payload },
+  action: { type: ActionType; payload: any }
 ) => {
   const updatedData = { ...state };
   switch (action.type) {
-    //underscore convention from react docs
     case ActionType.SetMemberList:
       updatedData.membersList = action.payload;
       break;
@@ -72,7 +70,7 @@ export default function AllMembers() {
       });
   }, []);
 
-  //filter members based on search term
+  // filter members based on search term
   const filteredMembers = membersList.filter((member) => {
     const smallSearchTerm = searchTerm.toLowerCase();
     return (
@@ -82,11 +80,14 @@ export default function AllMembers() {
     );
   });
 
-  const indexOfLastMember = state.currentPage * perPage;
-  const indexOfFirstMember = indexOfLastMember - perPage;
-  const paginatedMembers = filteredMembers.slice(
-    indexOfFirstMember,
-    indexOfLastMember,
+  // group members by role
+  const groupedByRole: Record<string, Member[]> = filteredMembers.reduce(
+    (acc, member) => {
+      if (!acc[member.role]) acc[member.role] = [];
+      acc[member.role].push(member);
+      return acc;
+    },
+    {} as Record<string, Member[]>
   );
 
   if (loading)
@@ -95,17 +96,15 @@ export default function AllMembers() {
         <Spinner />
       </div>
     );
-  const handlePageChange = (newPage: number) => {
-    dispatch({ type: ActionType.SetCurrentPage, payload: newPage });
-  };
 
   return (
     <div className="max-w-4xl mx-auto py-12">
-      <h1>All Members</h1>
+      <h1 className="text-center text-2xl font-bold">All Members</h1>
       <p className="text-lg text-center mt-4 mb-10">
-        List of all the members of the DTU Times team.
+        List of all the members of the DTU Times team, grouped by role.
       </p>
-      <div className="px-3">
+
+      <div className="px-3 mb-8">
         <SearchBar
           searchTerm={searchTerm}
           onSearch={(value) =>
@@ -114,24 +113,30 @@ export default function AllMembers() {
         />
       </div>
 
-      <div className="w-full  gap-4 flex-wrap flex justify-center items-center">
-        {paginatedMembers.map((member) => (
-          <div key={member.id}>
-            <UserCard
-              name={member.name}
-              role={member.role}
-              email={member.email}
-              avatar={member.id}
-            />
+      {/* Render grouped members */}
+      <div className="space-y-12">
+        {Object.entries(groupedByRole).map(([role, members]) => (
+          <div key={role}>
+            <h1
+              className="text-2xl font-semibold mb-6 text-center text-blue-500 
+             border-b-2 border-blue-300 pb-2 px-10">
+              {role}
+            </h1>
+            <div className="w-full gap-4 flex flex-wrap justify-center items-center">
+              {members.map((member) => (
+                <div key={member.id}>
+                  <UserCard
+                    name={member.name}
+                    role={member.role}
+                    email={member.email}
+                    avatar={member.id}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         ))}
       </div>
-      <Pagination
-        filtered_content={filteredMembers}
-        current_page={state.currentPage}
-        per_page={perPage}
-        handlePageChange={handlePageChange}
-      />
     </div>
   );
 }
