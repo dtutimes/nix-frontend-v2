@@ -5,6 +5,7 @@ import process from "process";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/",
   plugins: [react()],
   resolve: {
     alias: {

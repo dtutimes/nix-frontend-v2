@@ -108,7 +108,7 @@ function SidebarItem({
               className={({ isActive }) =>
                 isActive ? " bg-gray-500 rounded " : ""
               }
-              to={items.path}
+              to={`/${items.path}`}
             >
               <div
                 className={`flex items-center h-[45px]  p-2 cursor-pointer ${isSidebarOpen ? "w-[220px] hover:bg-gray-500 hover:rounded transition-all duration-600" : "w-[45px] transition-all duration-600"}`}

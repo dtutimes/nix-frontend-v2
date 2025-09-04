@@ -9,8 +9,8 @@ const SearchBar = ({
 
   return (
     <div className="flex justify-center items-center">
-      <div className="mb-4 flex items-center p-4 space-x-6 bg-white rounded-xl ">
-        <div className="flex bg-gray-100 p-4 w-72 space-x-4 rounded-lg">
+      <div className="flex items-center p-4 w-full space-x-6 bg-white rounded-xl ">
+        <div className="flex bg-gray-100 p-4 w-full space-x-4 rounded-lg">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             className="h-6 w-6 opacity-30"
@@ -27,7 +27,7 @@ const SearchBar = ({
           </svg>
           <input
             id="search-input"
-            className="bg-gray-100 outline-none"
+            className="bg-gray-100 w-full outline-none"
             type="text"
             placeholder="Search"
             value={searchTerm}
