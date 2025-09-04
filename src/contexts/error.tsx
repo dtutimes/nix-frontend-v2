@@ -1,5 +1,8 @@
 import React from "react";
-import { CustomError, ErrorCtxType } from "@/commonlib/types/frontend/contextTypes";
+import {
+  CustomError,
+  ErrorCtxType,
+} from "@/commonlib/types/frontend/contextTypes";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";

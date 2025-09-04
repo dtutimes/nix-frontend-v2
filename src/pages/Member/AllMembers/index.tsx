@@ -4,7 +4,7 @@ import { Spinner } from "@/components/Spinner";
 import UserCard from "@/components/UserCard";
 import { ErrorContext } from "@/contexts/error";
 import API from "@/services/API";
-import {Member} from "@/commonlib/types/member";
+import { Member } from "@/commonlib/types/member";
 import React from "react";
 import { useEffect } from "react";
 import { MEMBERS_PER_PAGE as perPage } from "@/config";

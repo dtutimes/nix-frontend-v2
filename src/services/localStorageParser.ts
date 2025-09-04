@@ -1,5 +1,8 @@
 import Permission from "@/commonlib/types/permissions";
-import { GrantedPermissions, IUser } from "@/commonlib/types/frontend/contextTypes";
+import {
+  GrantedPermissions,
+  IUser,
+} from "@/commonlib/types/frontend/contextTypes";
 
 export const getUserFromStorage = () => {
   const data = localStorage.getItem("user");
