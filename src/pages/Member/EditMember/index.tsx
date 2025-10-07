@@ -10,7 +10,7 @@ import { IUser } from "@/commonlib/types/frontend/contextTypes";
 import { MainWebsiteRole } from "@/commonlib/types/mainWebsiteRole";
 import Permission from "@/commonlib/types/permissions";
 import { Role } from "@/commonlib/types/role";
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
@@ -206,6 +206,8 @@ export default function EditMember() {
   };
 
   const [state, dispatch] = React.useReducer(reducer, initialState);
+  // local state to track file selected by user (so we can show the clear '×' only for newly chosen files)
+  const [selectedFileName, setSelectedFileName] = useState<string | null>(null);
 
   const {
     target_name,
@@ -423,19 +425,51 @@ export default function EditMember() {
             <label className="block text-sm font-semibold mb-2">
               Profile picture
             </label>
-            <input
-              disabled={id !== user.id}
-              type="file"
-              id="blog-image"
-              accept="image/png, image/jpeg, image/jpg"
-              onChange={(e) =>
-                dispatch({
-                  type: ActionType.SetProfilePicture,
-                  payload: e.target.files[0],
-                })
-              }
-              className="border p-2 rounded"
-            />
+            <div className="flex items-center space-x-3">
+              <input
+                disabled={id !== user.id}
+                type="file"
+                id="blog-image"
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={(e) => {
+                  const file = e.target.files?.[0] || null;
+                  if (file) {
+                    setSelectedFileName(file.name);
+                    dispatch({ type: ActionType.SetProfilePicture, payload: file });
+                  } else {
+                    setSelectedFileName(null);
+                    dispatch({ type: ActionType.UpdateProfilePictureLink, payload: null });
+                  }
+                }}
+                className="border p-2 rounded"
+              />
+              {/* show filename and clear (×) button when a file/avatar is present (only for owner) */}
+              {id === user.id && selectedFileName && (
+                <div>
+                  <button
+                    type="button"
+                    aria-label="Remove selected file"
+                    title="Remove selected file"
+                    onClick={() => {
+                      // clear selected filename, state and file input
+                      setSelectedFileName(null);
+                      dispatch({ type: ActionType.UpdateProfilePictureLink, payload: null });
+                      try {
+                        const fileInput = document.getElementById(
+                          "blog-image",
+                        ) as HTMLInputElement | null;
+                        if (fileInput) fileInput.value = "";
+                      } catch (err) {
+                        // ignore
+                      }
+                    }}
+                    className="inline-flex items-center justify-center w-7 h-7 rounded-full bg-red-500 text-white hover:bg-red-600"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
         {id === user.id && (
