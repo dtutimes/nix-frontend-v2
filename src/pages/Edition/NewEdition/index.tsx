@@ -81,27 +81,46 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
 
     const requestMethod = id ? "PUT" : "POST";
 
-    if (image_file.files.length !== 0) {
-      const image = image_file.files[0] as File;
-      const imageForm = new FormData();
-      imageForm.append("image", image);
-      toastId.current = toast.info("Uploading 0%", { autoClose: false });
-      const image_promise = API.post(
-        `/images/edition-image/${edition.edition_id}`,
-        imageForm,
-        {
-          onUploadProgress: (progressEvent) => {
-            const progress = progressEvent.loaded / progressEvent.total;
-            const percentCompleted = Math.round(progress * 100);
-            console.debug(progress);
-            toast.update(toastId.current, {
-              render: `Uploading ${percentCompleted}%`,
-              type: "info",
-              progress: progress,
-            });
-          },
-        },
-      )
+    // FIRST: Create/update edition
+    const data_promise = API({
+      method: requestMethod,
+      url: endpoint,
+      data: data,
+    });
+
+    // THEN: If image exists, upload it using the returned edition_id
+    if (image_file.files && image_file.files.length !== 0) {
+      data_promise
+        .then((response) => {
+          // ✅ Wait for edition creation
+          const created_edition = response.data.data; // Get backend response
+
+          if (!created_edition?.edition_id) {
+            throw new Error("Edition ID not found in response");
+          }
+
+          const image = image_file.files[0] as File;
+          const imageForm = new FormData();
+          imageForm.append("image", image);
+          toastId.current = toast.info("Uploading 0%", { autoClose: false });
+
+          return API({
+            method: "POST",
+            url: `/images/edition-image/${created_edition.edition_id}`, // ✅ Use response ID
+            data: imageForm,
+            params: { thumbnail: "true" },
+            onUploadProgress: (progressEvent) => {
+              const progress = progressEvent.loaded / progressEvent.total;
+              const percentCompleted = Math.round(progress * 100);
+              console.debug(progress);
+              toast.update(toastId.current, {
+                render: `Uploading ${percentCompleted}%`,
+                type: "info",
+                progress: progress,
+              });
+            },
+          });
+        })
         .then(() => {
           toast.update(toastId.current, {
             render: "Uploading complete!",
@@ -109,32 +128,18 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
             progress: 1,
           });
           toast.done(toastId.current);
-          toast.success("Image uploaded successfully");
+          toast.success("Edition and image saved successfully");
+          navigate("/edition/all-editions");
         })
-        .catch((e) => {
-          toast.done(toastId.current);
-          setError(e);
-        })
-        .finally(() => (toastId.current = null));
-
-      const data_promise = API({
-        method: requestMethod,
-        url: endpoint,
-        data: data,
-      }).catch((error) => {
-        setError(error);
-      });
-
-      Promise.all([image_promise, data_promise]).then(() => {
-        toast.success("Edition saved successfully");
-        navigate("/edition/all-editions");
-      });
+        .catch((error) => {
+          if (toastId.current) {
+            toast.done(toastId.current);
+            toastId.current = null;
+          }
+          setError(error);
+        });
     } else {
-      API({
-        method: requestMethod,
-        url: endpoint,
-        data: data,
-      })
+      data_promise
         .then(() => {
           toast.success("Edition saved successfully");
           navigate("/edition/all-editions");
