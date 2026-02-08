@@ -265,8 +265,8 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
                 fallback={true}
               >
                 <button
-                  type="submit"
-                  value={"delete"}
+                  type="button"
+                  onClick={handleDelete}
                   className="p-2 text-white bg-red-500 rounded hover:bg-indigo-500"
                 >
                   Delete Edition
