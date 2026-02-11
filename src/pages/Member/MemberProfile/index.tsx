@@ -8,17 +8,21 @@ import { IUser } from "@/commonlib/types/frontend/contextTypes";
 import { MainWebsiteRole } from "@/types/mainWebsiteRole";
 import Permission from "@/commonlib/types/permissions";
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { toast } from "react-toastify";
 
 type MemberProfileInitialState = IUser;
 
 export default function MemberProfile() {
   const { setError } = React.useContext(ErrorContext);
   const { user } = useContext(CurrUserCtx);
+  const navigate = useNavigate();
 
   const { id } = useParams() || user;
   const [userDetails, setUserDetails] =
     useState<MemberProfileInitialState>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [deleteConfirmation, setDeleteConfirmation] = useState("");
 
   useEffect(() => {
     if (id && id !== user.id) {
@@ -36,12 +40,48 @@ export default function MemberProfile() {
     }
   }, []);
 
+  const handleDeleteUser = () => {
+    if (!userDetails) return;
+
+    const isOwnProfile = userDetails.id === user.id;
+    if (isOwnProfile) {
+      toast.error("You cannot delete your own account.");
+      return;
+    }
+
+    setShowDeleteDialog(true);
+    setDeleteConfirmation("");
+  };
+
+  const confirmDeleteUser = () => {
+    if (deleteConfirmation !== "DELETE") {
+      toast.error('Please type "DELETE" to confirm.');
+      return;
+    }
+
+    API.delete(`/user/delete-user-superuser/${userDetails.id}`)
+      .then(() => {
+        toast.success("User deleted successfully");
+        setShowDeleteDialog(false);
+        navigate("/member/all-members/");
+      })
+      .catch((error) => {
+        setShowDeleteDialog(false);
+        setError(error);
+      });
+  };
+
   if (userDetails === null)
     return (
       <div className="flex w-full h-screen justify-center items-center">
         <Spinner />
       </div>
     );
+
+  const showDeleteButton =
+    user.is_superuser &&
+    userDetails.id !== user.id &&
+    userDetails.is_superuser === false;
 
   return (
     <div className="relative max-w-4xl mx-auto my-2 md:my-10 p-8 shadow rounded">
@@ -66,11 +106,11 @@ export default function MemberProfile() {
                 </span>
               </div>
             </div>
-            <div className="absolute top-0 right-0 m-8">
+            <div className="absolute top-0 right-0 m-8 flex flex-col items-end gap-2">
               {userDetails.id === user.id ? (
                 <Link
                   to={`/member/edit-details/${userDetails.id}/`}
-                  className="bg-blue-500 md:text-md text-sm w-[100px] text-white p-2 rounded hover:bg-green-500"
+                  className="bg-blue-500 md:text-md text-sm w-[100px] text-white p-2 rounded hover:bg-green-500 text-center"
                 >
                   Edit Info
                 </Link>
@@ -81,11 +121,20 @@ export default function MemberProfile() {
                 >
                   <Link
                     to={`/member/edit-details/${userDetails.id}/`}
-                    className="bg-blue-500 md:text-md text-sm w-[100px] text-white p-2 rounded hover:bg-green-500"
+                    className="bg-blue-500 md:text-md text-sm w-[100px] text-white p-2 rounded hover:bg-green-500 text-center"
                   >
                     Edit Info
                   </Link>
                 </PermissionProtector>
+              )}
+              {showDeleteButton && (
+                <button
+                  type="button"
+                  onClick={handleDeleteUser}
+                  className="bg-red-500 md:text-md text-sm w-[100px] text-white p-2 rounded hover:bg-red-600 text-center"
+                >
+                  Delete User
+                </button>
               )}
             </div>
           </div>
@@ -120,6 +169,48 @@ export default function MemberProfile() {
           </li>
         </ul>
       </div>
+
+      {showDeleteDialog && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+          <div className="bg-white rounded shadow-lg p-6 max-w-md w-full">
+            <h2 className="text-xl font-bold mb-4">Delete User</h2>
+            <p className="text-gray-700 mb-2">
+              This action will permanently delete{" "}
+              <span className="font-semibold">{userDetails.name}</span>'s
+              account.
+            </p>
+            <p className="text-gray-700 mb-4">
+              To confirm, please type <span className="font-semibold">DELETE</span>{" "} below.
+            </p>
+            <input
+              type="text"
+              value={deleteConfirmation}
+              onChange={(e) => setDeleteConfirmation(e.target.value)}
+              className="border border-black/30 p-2 rounded w-full mb-4"
+              placeholder="Type DELETE to confirm"
+            />
+            <div className="flex justify-end gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowDeleteDialog(false);
+                  setDeleteConfirmation("");
+                }}
+                className="bg-gray-200 text-black px-4 py-2 rounded hover:bg-gray-300"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteUser}
+                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
