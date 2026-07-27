@@ -29,7 +29,7 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
   const toastId = useRef(null);
 
   const handleDelete = () => {
-    if (window.confirm("Are you sure you want to word this edition?")) {
+    if (window.confirm("Are you sure you want to delete this edition?")) {
       API.delete(`/edition/delete-edition/${id}`, {
         data: { email: user?.email },
       })
