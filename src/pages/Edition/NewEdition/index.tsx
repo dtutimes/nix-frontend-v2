@@ -1,5 +1,6 @@
 import { PermissionProtector } from "@/components/PermissionProtector";
 import { Spinner } from "@/components/Spinner";
+import { CurrUserCtx } from "@/contexts/current_user";
 import { ErrorContext } from "@/contexts/error";
 import API from "@/services/API";
 import { IEdition as Edition } from "@/commonlib/types/edition";
@@ -22,13 +23,16 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
   const location = useLocation();
   const navigate = useNavigate();
   const { setError } = useContext(ErrorContext);
+  const { user } = useContext(CurrUserCtx);
   const { id } = useParams<{ id: string }>();
   const [edition, setEdition] = useState<Edition>(null);
   const toastId = useRef(null);
 
   const handleDelete = () => {
-    if (window.confirm("Are you sure you want to word this edition?")) {
-      API.delete(`/edition/delete-edition/${id}`)
+    if (window.confirm("Are you sure you want to delete this edition?")) {
+      API.delete(`/edition/delete-edition/${id}`, {
+        data: { email: user?.email },
+      })
         .then(() => {
           toast.success("Edition deleted successfully!");
           navigate("/edition/all-editions");
