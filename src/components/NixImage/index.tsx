@@ -11,6 +11,11 @@ export const NixImage: React.FC<NixImageProps> = ({ image_id, ...props }) => {
     let image_endpoint = `images/get/${image_id}`;
     if (props?.thumbnail) {
       image_endpoint = image_endpoint.concat(`?thumbnail=${props.thumbnail}`);
+      if (props?.image_type) {
+        image_endpoint = image_endpoint.concat(
+          `&image_type=${props.image_type}`,
+        );
+      }
       if (props?.force_refresh) {
         image_endpoint = image_endpoint.concat(`&t=${new Date().getTime()}`);
       }

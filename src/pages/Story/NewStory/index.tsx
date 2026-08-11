@@ -345,6 +345,7 @@ export default function NewStory() {
           className="max-w-md max-h-md"
           image_id={blogImage}
           thumbnail={true} // 256
+          image_type={1}
           force_refresh={true}
           alt={blogImage}
         />

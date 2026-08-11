@@ -24,6 +24,7 @@ export default function EditionCard({ edition }: { edition: Edition }) {
                 className="w-full h-64 object-cover object-center rounded-lg"
                 height="400"
                 image_id={`edition-${edition.edition_id}`}
+                image_type={2}
                 thumbnail={true}
                 style={{
                   aspectRatio: "600/400",
