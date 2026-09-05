@@ -26,6 +26,7 @@ export default function EditionCard({ edition }: { edition: Edition }) {
                 image_id={`edition-${edition.edition_id}`}
                 image_type={2}
                 thumbnail={true}
+                cache_buster={edition.updatedAt ? new Date(edition.updatedAt).getTime() : undefined}
                 style={{
                   aspectRatio: "600/400",
                   objectFit: "cover",
