@@ -1,8 +1,13 @@
 import API from "@/services/API";
 import React, { useEffect } from "react";
 import { Spinner } from "../Spinner";
-import NixImageProps from "@/types/nixImageProps";
+import BaseNixImageProps from "@/types/frontend/nixImageProps";
 import ErrorIcon from "@/assets/errorIcon";
+
+export interface NixImageProps extends BaseNixImageProps {
+  cache_buster?: string | number;
+  image_type?: number;
+}
 
 export const NixImage: React.FC<NixImageProps> = ({ image_id, ...props }) => {
   const [image, setImage] = React.useState<string | ArrayBuffer>(null);
@@ -16,11 +21,15 @@ export const NixImage: React.FC<NixImageProps> = ({ image_id, ...props }) => {
           `&image_type=${props.image_type}`,
         );
       }
-      if (props?.force_refresh) {
+      if (props?.cache_buster !== undefined) {
+        image_endpoint = image_endpoint.concat(`&t=${props.cache_buster}`);
+      } else if (props?.force_refresh) {
         image_endpoint = image_endpoint.concat(`&t=${new Date().getTime()}`);
       }
     } else {
-      if (props?.force_refresh) {
+      if (props?.cache_buster !== undefined) {
+        image_endpoint = image_endpoint.concat(`?t=${props.cache_buster}`);
+      } else if (props?.force_refresh) {
         image_endpoint = image_endpoint.concat(`?t=${new Date().getTime()}`);
       }
     }

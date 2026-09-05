@@ -108,7 +108,7 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
 
           // Use edition_id from response - works for both new and updated editions
           return API({
-            method: "POST",
+            method: id ? "PUT" : "POST",
             url: `/images/edition-image/${created_edition.edition_id}`,
             data: imageForm,
             params: { thumbnail: "true" },
