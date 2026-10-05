@@ -88,7 +88,7 @@ export default function Dashbboard() {
     );
   return (
     <div>
-      <div className="flex justify-start flex-col xl:flex-row">
+      <div className="flex justify-start flex-col xl:flex-row mt-8">
         <div className="flex justify-evenly flex-col lg:flex-row">
           <div className="m-6 w-[300px] h-[464px] border-black border-2 bg-gray-700 text-white rounded-xl overflow-hidden grid grid-rows-2">
             <div className="self-start flex flex-col">
@@ -151,6 +151,18 @@ export default function Dashbboard() {
             </Link>
           </div>
         </div>
+      </div>
+
+      <h1 style={{ marginTop: "30px", fontSize: "2rem" }}>Google Analytics</h1>
+      <div className="relative pb-[25%] h-0 overflow-hidden">
+        <iframe
+          title="GA Dashboard"
+          src="https://lookerstudio.google.com/embed/reporting/1b512a23-76f6-4a5a-8a41-b8c49fe08aff/page/bX1WF"
+          className="absolute top-10 left-10 w-[95%] h-full"
+          style={{ border: "0" }}
+          allowFullScreen
+          sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
+        />
       </div>
 
       <div className="p-8">
