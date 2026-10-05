@@ -92,6 +92,11 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
 
     // THEN: If image exists, upload it using the returned edition_id
     if (image_file.files && image_file.files.length !== 0) {
+      const image = image_file.files[0] as File;
+      if (image.size > 5 * 1024 * 1024) {
+        toast.error("Image file size must be less than 5MB");
+        return;
+      }
       data_promise
         .then((response) => {
           // Wait for edition creation/update to complete
@@ -101,7 +106,6 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
             throw new Error("Edition ID not found in response");
           }
 
-          const image = image_file.files[0] as File;
           const imageForm = new FormData();
           imageForm.append("image", image);
           toastId.current = toast.info("Uploading 0%", { autoClose: false });
@@ -246,6 +250,9 @@ export default function NewEdition({ edition: _ed }: { edition?: Edition }) {
               name="edition-cover"
               accept="image/png, image/jpeg, image/jpg"
             />
+            <p className="text-sm text-gray-500 mt-1">
+              Max file size: 5MB. Supported formats: PNG, JPG, JPEG.
+            </p>
           </div>
 
           <div className="flex space-x-4">
